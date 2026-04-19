@@ -60,8 +60,8 @@ export const getAvailableTimeSlots = () => {
 };
 
 export const APPOINTMENT_TYPES = [
-  { id: "checkup", name: "Regular Checkup", duration: "60 min", price: "$120" },
-  { id: "cleaning", name: "Teeth Cleaning", duration: "45 min", price: "$90" },
-  { id: "consultation", name: "Consultation", duration: "30 min", price: "$75" },
-  { id: "emergency", name: "Emergency Visit", duration: "30 min", price: "$150" },
+  { id: "checkup", name: "Khám Tổng Quát", duration: "60 phút", price: "500.000đ" },
+  { id: "cleaning", name: "Cạo Vôi Răng", duration: "45 phút", price: "300.000đ" },
+  { id: "consultation", name: "Tư Vấn", duration: "30 phút", price: "Miễn phí" },
+  { id: "emergency", name: "Khám Cấp Cứu", duration: "30 phút", price: "800.000đ" },
 ];

@@ -29,7 +29,7 @@ function Navbar() {
               }`}
             >
               <HomeIcon className="w-4 h-4" />
-              <span className="hidden md:inline">Dashboard</span>
+              <span className="hidden md:inline">Trang chủ</span>
             </Link>
 
             <Link
@@ -39,7 +39,7 @@ function Navbar() {
               }`}
             >
               <CalendarIcon className="w-4 h-4" />
-              <span className="hidden md:inline">Appointments</span>
+              <span className="hidden md:inline">Lịch hẹn</span>
             </Link>
 
             <Link
@@ -49,16 +49,7 @@ function Navbar() {
               }`}
             >
               <MicIcon className="w-4 h-4" />
-              <span className="hidden md:inline">Voice</span>
-            </Link>
-            <Link
-              href="/pro"
-              className={`flex items-center gap-2 transition-colors hover:text-foreground ${
-                pathname === "/pro" ? "text-foreground" : "text-muted-foreground"
-              }`}
-            >
-              <CrownIcon className="w-4 h-4" />
-              <span className="hidden md:inline">Pro</span>
+              <span className="hidden md:inline">Trợ lý AI</span>
             </Link>
           </div>
         </div>

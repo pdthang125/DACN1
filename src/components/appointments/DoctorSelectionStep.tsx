@@ -22,14 +22,14 @@ function DoctorSelectionStep({
   if (isLoading)
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-semibold">Choose Your Dentist</h2>
+        <h2 className="text-2xl font-semibold">Chọn Bác sĩ Nha khoa</h2>
         <DoctorCardsLoading />
       </div>
     );
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Choose Your Dentist</h2>
+      <h2 className="text-2xl font-semibold">Chọn Bác sĩ Nha khoa</h2>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dentists.map((dentist) => (
@@ -52,7 +52,7 @@ function DoctorSelectionStep({
                 <div className="flex-1">
                   <CardTitle className="text-lg">{dentist.name}</CardTitle>
                   <CardDescription className="text-primary font-medium">
-                    {dentist.speciality || "General Dentistry"}
+                    {dentist.speciality || "Nha khoa Tổng quát"}
                   </CardDescription>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="flex items-center gap-1">
@@ -60,7 +60,7 @@ function DoctorSelectionStep({
                       <span className="text-sm font-medium">5</span>
                     </div>
                     <span className="text-sm text-muted-foreground">
-                      ({dentist.appointmentCount} appointments)
+                      ({dentist.appointmentCount} lượt khám)
                     </span>
                   </div>
                 </div>
@@ -77,9 +77,9 @@ function DoctorSelectionStep({
                 <span>{dentist.phone}</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                {dentist.bio || "Experienced dental professional providing quality care."}
+                {dentist.bio || "Bác sĩ giàu kinh nghiệm, tận tâm chăm sóc sức khoẻ răng miệng."}
               </p>
-              <Badge variant="secondary">Licensed Professional</Badge>
+              <Badge variant="secondary">Đã cấp chứng chỉ Hành nghề</Badge>
             </CardContent>
           </Card>
         ))}
@@ -87,7 +87,7 @@ function DoctorSelectionStep({
 
       {selectedDentistId && (
         <div className="flex justify-end">
-          <Button onClick={onContinue}>Continue to Time Selection</Button>
+          <Button onClick={onContinue}>Tiếp tục chọn thời gian</Button>
         </div>
       )}
     </div>

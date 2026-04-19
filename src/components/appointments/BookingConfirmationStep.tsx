@@ -33,14 +33,14 @@ function BookingConfirmationStep({
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" onClick={onBack}>
           <ChevronLeftIcon className="w-4 h-4 mr-2" />
-          Back
+          Quay lại
         </Button>
-        <h2 className="text-2xl font-semibold">Confirm Your Appointment</h2>
+        <h2 className="text-2xl font-semibold">Xác nhận Lịch hẹn</h2>
       </div>
 
       <Card className="max-w-2xl">
         <CardHeader>
-          <CardTitle>Appointment Summary</CardTitle>
+          <CardTitle>Chi tiết Lịch hẹn</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -50,17 +50,17 @@ function BookingConfirmationStep({
           {/* appointment details */}
           <div className="grid grid-cols-2 gap-4 pt-4 border-t">
             <div>
-              <p className="text-sm text-muted-foreground">Appointment Type</p>
+              <p className="text-sm text-muted-foreground">Dịch vụ</p>
               <p className="font-medium">{appointmentType?.name}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Duration</p>
+              <p className="text-sm text-muted-foreground">Thời lượng</p>
               <p className="font-medium">{appointmentType?.duration}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Date</p>
+              <p className="text-sm text-muted-foreground">Ngày khám</p>
               <p className="font-medium">
-                {new Date(selectedDate).toLocaleDateString("en-US", {
+                {new Date(selectedDate).toLocaleDateString("vi-VN", {
                   weekday: "long",
                   year: "numeric",
                   month: "long",
@@ -69,15 +69,15 @@ function BookingConfirmationStep({
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Time</p>
+              <p className="text-sm text-muted-foreground">Giờ khám</p>
               <p className="font-medium">{selectedTime}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Location</p>
-              <p className="font-medium">Dental Center</p>
+              <p className="text-sm text-muted-foreground">Địa điểm</p>
+              <p className="font-medium">Nha khoa DentWise</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Cost</p>
+              <p className="text-sm text-muted-foreground">Chi phí</p>
               <p className="font-medium text-primary">{appointmentType?.price}</p>
             </div>
           </div>
@@ -87,10 +87,10 @@ function BookingConfirmationStep({
       {/* action buttons */}
       <div className="flex gap-4">
         <Button variant="outline" onClick={onModify}>
-          Modify Appointment
+          Sửa lịch
         </Button>
         <Button onClick={onConfirm} className="bg-primary" disabled={isBooking}>
-          {isBooking ? "Booking..." : "Confirm Booking"}
+          {isBooking ? "Đang xử lý..." : "Xác nhận Đặt lịch"}
         </Button>
       </div>
     </div>

@@ -24,7 +24,6 @@ export default async function Home() {
       <Hero />
       <HowItWorks />
       <WhatToAsk />
-      <PricingSection />
       <CTA />
       <Footer />
     </div>

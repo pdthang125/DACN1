@@ -63,7 +63,7 @@ function AppointmentsPage() {
               body: JSON.stringify({
                 userEmail: appointment.patientEmail,
                 doctorName: appointment.doctorName,
-                appointmentDate: format(new Date(appointment.date), "EEEE, MMMM d, yyyy"),
+                appointmentDate: format(new Date(appointment.date), "dd/MM/yyyy"),
                 appointmentTime: appointment.time,
                 appointmentType: appointmentType?.name,
                 duration: appointmentType?.duration,
@@ -98,8 +98,8 @@ function AppointmentsPage() {
       <div className="max-w-7xl mx-auto px-6 py-8 pt-24">
         {/* header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Book an Appointment</h1>
-          <p className="text-muted-foreground">Find and book with verified dentists in your area</p>
+          <h1 className="text-3xl font-bold mb-2">Đặt Lịch Khám</h1>
+          <p className="text-muted-foreground">Tìm và đặt hẹn với đội ngũ nha sĩ uy tín</p>
         </div>
 
         <ProgressSteps currentStep={currentStep} />
@@ -146,7 +146,7 @@ function AppointmentsPage() {
           onOpenChange={setShowConfirmationModal}
           appointmentDetails={{
             doctorName: bookedAppointment.doctorName,
-            appointmentDate: format(new Date(bookedAppointment.date), "EEEE, MMMM d, yyyy"),
+            appointmentDate: format(new Date(bookedAppointment.date), "dd/MM/yyyy"),
             appointmentTime: bookedAppointment.time,
             userEmail: bookedAppointment.patientEmail,
           }}
@@ -156,7 +156,7 @@ function AppointmentsPage() {
       {/* SHOW EXISTING APPOINTMENTS FOR THE CURRENT USER */}
       {userAppointments.length > 0 && (
         <div className="mb-8 max-w-7xl mx-auto px-6 py-8">
-          <h2 className="text-xl font-semibold mb-4">Your Upcoming Appointments</h2>
+          <h2 className="text-xl font-semibold mb-4">Lịch hẹn sắp tới của bạn</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {userAppointments.map((appointment) => (
               <div key={appointment.id} className="bg-card border rounded-lg p-4 shadow-sm">
@@ -175,7 +175,7 @@ function AppointmentsPage() {
                 </div>
                 <div className="space-y-1 text-sm">
                   <p className="text-muted-foreground">
-                    📅 {format(new Date(appointment.date), "MMM d, yyyy")}
+                    📅 {format(new Date(appointment.date), "dd/MM/yyyy")}
                   </p>
                   <p className="text-muted-foreground">🕐 {appointment.time}</p>
                 </div>

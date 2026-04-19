@@ -35,11 +35,11 @@ export function AppointmentConfirmationModal({
           </div>
 
           <DialogTitle className="text-xl font-semibold text-center">
-            Appointment Confirmed!
+            Đặt Lịch Thành Công!
           </DialogTitle>
 
           <DialogDescription className="text-center text-muted-foreground">
-            Your appointment has been successfully booked
+            Lịch hẹn của bạn đã được ghi nhận vào hệ thống
           </DialogDescription>
         </DialogHeader>
 
@@ -59,7 +59,7 @@ export function AppointmentConfirmationModal({
             <div className="text-center space-y-1">
               <div className="flex items-center justify-center gap-2 text-sm font-medium text-primary">
                 <MailIcon className="h-4 w-4" />
-                Details sent to your inbox
+                Thông tin chi tiết đã được gửi đến email
               </div>
               {appointmentDetails?.userEmail && (
                 <p className="text-xs text-muted-foreground">{appointmentDetails.userEmail}</p>
@@ -70,7 +70,7 @@ export function AppointmentConfirmationModal({
           {/* Appointment Summary */}
           {appointmentDetails && (
             <div className="bg-muted/30 rounded-lg p-4 space-y-3">
-              <h4 className="font-medium text-sm text-center mb-3">Quick Summary</h4>
+              <h4 className="font-medium text-sm text-center mb-3">Tóm tắt Lịch hẹn</h4>
 
               <div className="space-y-2">
                 <div className="flex items-center gap-3 text-sm">
@@ -95,21 +95,21 @@ export function AppointmentConfirmationModal({
           <div className="flex flex-col gap-3">
             <Link href="/appointments" className="w-full">
               <Button className="w-full" onClick={() => onOpenChange(false)}>
-                View My Appointments
+                Xem Danh sách Lịch hẹn
               </Button>
             </Link>
 
             <Button variant="outline" className="w-full" onClick={() => onOpenChange(false)}>
-              Close
+              Đóng
             </Button>
           </div>
 
           {/* Additional Info */}
           <div className="text-center text-xs text-muted-foreground border-t pt-4">
             <p>
-              Please arrive 15 minutes early for your appointment.
+              Vui lòng đến sớm 15 phút trước giờ hẹn.
               <br />
-              Need to reschedule? Contact us 24 hours in advance.
+              Cần đổi lịch? Xin vui lòng thông báo cho chúng tôi trước 24 tiếng.
             </p>
           </div>
         </div>

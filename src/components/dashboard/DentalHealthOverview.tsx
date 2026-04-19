@@ -15,9 +15,9 @@ async function DentalHealthOverview() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BrainIcon className="size-5 text-primary" />
-          Your Dental Health
+          Hồ sơ Sức khỏe Nha khoa
         </CardTitle>
-        <CardDescription>Keep track of your dental care journey</CardDescription>
+        <CardDescription>Theo dõi hành trình chăm sóc răng miệng của bạn</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid md:grid-cols-3 gap-6">
@@ -25,19 +25,19 @@ async function DentalHealthOverview() {
             <div className="text-2xl font-bold text-primary mb-1">
               {appointmentStats.completedAppointments}
             </div>
-            <div className="text-sm text-muted-foreground">Completed Visits</div>
+            <div className="text-sm text-muted-foreground">Số lần đã khám</div>
           </div>
           <div className="text-center p-4 bg-muted/30 rounded-xl">
             <div className="text-2xl font-bold text-primary mb-1">
               {appointmentStats.totalAppointments}
             </div>
-            <div className="text-sm text-muted-foreground">Total Appointments</div>
+            <div className="text-sm text-muted-foreground">Tổng số lịch hẹn</div>
           </div>
           <div className="text-center p-4 bg-muted/30 rounded-xl">
             <div className="text-2xl font-bold text-primary mb-1">
               {format(new Date(user?.createdAt!), "MMM yyyy")}
             </div>
-            <div className="text-sm text-muted-foreground">Member Since</div>
+            <div className="text-sm text-muted-foreground">Thành viên từ</div>
           </div>
         </div>
 
@@ -47,19 +47,19 @@ async function DentalHealthOverview() {
               <MessageSquareIcon className="size-5 text-primary" />
             </div>
             <div>
-              <h4 className="font-semibold text-primary mb-1">Ready to get started?</h4>
+              <h4 className="font-semibold text-primary mb-1">Sẵn sàng trải nghiệm?</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Book your first appointment or try our AI voice assistant for instant dental advice.
+                Đặt lịch khám đầu tiên của bạn hoặc trò chuyện với trợ lý AI để được tư vấn nhé.
               </p>
               <div className="flex gap-2">
                 <Link href="/voice">
                   <Button size="sm" className="bg-primary hover:bg-primary/90">
-                    Try AI Assistant
+                    Trò chuyện với AI
                   </Button>
                 </Link>
                 <Link href="/appointments">
                   <Button size="sm" variant="outline">
-                    Book Appointment
+                    Đặt lịch khám
                   </Button>
                 </Link>
               </div>

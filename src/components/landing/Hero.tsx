@@ -25,29 +25,28 @@ function Hero() {
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-primary/5 rounded-full border border-primary/20 backdrop-blur-sm">
                   <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                   <span className="text-sm font-medium text-primary">
-                    AI-Powered Dental Assistant
+                    Trợ lý Nha khoa Trí tuệ Nhân tạo
                   </span>
                 </div>
 
                 {/* MAIN HEADING */}
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                   <span className="bg-gradient-to-br from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
-                    Your dental
+                    Giải đáp mọi thắc mắc
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                    questions
+                    nha khoa
                   </span>
                   <br />
                   <span className="bg-gradient-to-br from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
-                    answered instantly
+                    ngay lập tức
                   </span>
                 </h1>
 
                 {/* SUBTITLE */}
                 <p className="text-lg text-muted-foreground leading-relaxed max-w-xl font-medium">
-                  Chat with our AI dental assistant for instant advice, book smart appointments, and
-                  get personalized care recommendations. Available 24/7.
+                  Trò chuyện với trợ lý AI để được tư vấn nhanh, đặt lịch hẹn thông minh và nhận phác đồ chăm sóc cá nhân hóa. Hỗ trợ 24/7.
                 </p>
               </div>
 
@@ -56,14 +55,14 @@ function Hero() {
                 <SignUpButton mode="modal">
                   <Button size={"lg"}>
                     <MicIcon className="mr-2 size-5" />
-                    Try voice agent
+                    Trò chuyện với AI
                   </Button>
                 </SignUpButton>
 
                 <SignUpButton mode="modal">
                   <Button size={"lg"} variant={"outline"}>
                     <CalendarIcon className="mr-2 size-5" />
-                    Book appointment
+                    Đặt lịch khám
                   </Button>
                 </SignUpButton>
               </div>
@@ -121,8 +120,8 @@ function Hero() {
                       <span className="text-sm font-bold text-foreground">4.9/5</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Trusted by{" "}
-                      <span className="font-semibold text-foreground">1,200+ patients</span>
+                      Được tin dùng bởi{" "}
+                      <span className="font-semibold text-foreground">hơn 1,200+ bệnh nhân</span>
                     </p>
                   </div>
                 </div>

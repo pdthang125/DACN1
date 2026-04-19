@@ -44,16 +44,16 @@ function TimeSelectionStep({
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" onClick={onBack}>
           <ChevronLeftIcon className="w-4 h-4 mr-2" />
-          Back
+          Quay lại
         </Button>
 
-        <h2 className="text-2xl font-semibold">Select Date & Time</h2>
+        <h2 className="text-2xl font-semibold">Chọn Ngày & Giờ</h2>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* appointment type selection */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Appointment Type</h3>
+          <h3 className="text-lg font-medium">Loại dịch vụ</h3>
           <div className="space-y-3">
             {APPOINTMENT_TYPES.map((type) => (
               <Card
@@ -79,7 +79,7 @@ function TimeSelectionStep({
 
         {/* date & time selection */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Available Dates</h3>
+          <h3 className="text-lg font-medium">Chọn Ngày khám</h3>
 
           {/* date Selection */}
           <div className="grid grid-cols-2 gap-3">
@@ -92,7 +92,7 @@ function TimeSelectionStep({
               >
                 <div className="text-center">
                   <div className="font-medium">
-                    {new Date(date).toLocaleDateString("en-US", {
+                    {new Date(date).toLocaleDateString("vi-VN", {
                       weekday: "short",
                       month: "short",
                       day: "numeric",
@@ -106,7 +106,7 @@ function TimeSelectionStep({
           {/* time Selection (only show when date is selected) */}
           {selectedDate && (
             <div className="space-y-3">
-              <h4 className="font-medium">Available Times</h4>
+              <h4 className="font-medium">Giờ trống</h4>
               <div className="grid grid-cols-3 gap-2">
                 {availableTimeSlots.map((time) => {
                   const isBooked = bookedTimeSlots.includes(time);
@@ -121,7 +121,7 @@ function TimeSelectionStep({
                     >
                       <ClockIcon className="w-3 h-3 mr-1" />
                       {time}
-                      {isBooked && " (Booked)"}
+                      {isBooked && " (Đã đặt)"}
                     </Button>
                   );
                 })}
@@ -134,7 +134,7 @@ function TimeSelectionStep({
       {/* continue button (only show when all selections are made) */}
       {selectedType && selectedDate && selectedTime && (
         <div className="flex justify-end">
-          <Button onClick={onContinue}>Review Booking</Button>
+          <Button onClick={onContinue}>Xem lại Lịch đặt</Button>
         </div>
       )}
     </div>

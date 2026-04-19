@@ -16,23 +16,23 @@ export default function MainActions() {
               <Image src="/audio.png" alt="Voice AI" width={32} height={32} className="w-10" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-2">AI Voice Assistant</h3>
-              <p className="text-muted-foreground">Get instant dental advice through voice calls</p>
+              <h3 className="text-2xl font-bold mb-2">Trợ lý Trí tuệ Nhân tạo</h3>
+              <p className="text-muted-foreground">Nhận tư vấn nha khoa tức thì qua gọi thoại</p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-sm">24/7 availability</span>
+              <span className="text-sm">Hỗ trợ 24/7</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-sm">Professional dental guidance</span>
+              <span className="text-sm">Hướng dẫn nha khoa chuyên nghiệp</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-sm">Instant pain relief advice</span>
+              <span className="text-sm">Tư vấn khẩn cấp</span>
             </div>
           </div>
 
@@ -45,7 +45,7 @@ export default function MainActions() {
             })}
           >
             <MessageSquareIcon className="mr-2 h-5 w-5" />
-            Start Voice Call
+            Bắt đầu Trò chuyện
           </Link>
         </CardContent>
       </Card>
@@ -59,23 +59,23 @@ export default function MainActions() {
               <Image src="/calendar.png" alt="Calendar" width={32} height={32} className="w-10" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-2">Book Appointment</h3>
-              <p className="text-muted-foreground">Schedule with verified dentists in your area</p>
+              <h3 className="text-2xl font-bold mb-2">Đặt Lịch Khám</h3>
+              <p className="text-muted-foreground">Đặt lịch hẹn chọn Bác sĩ và Dịch vụ phù hợp</p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-sm">Verified dental professionals</span>
+              <span className="text-sm">Đội ngũ Nha sĩ chuyên môn cao</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-sm">Flexible scheduling</span>
+              <span className="text-sm">Sắp xếp lịch hẹn linh hoạt</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-sm">Instant confirmations</span>
+              <span className="text-sm">Xác nhận lịch ngay lập tức</span>
             </div>
           </div>
 
@@ -85,7 +85,7 @@ export default function MainActions() {
               className="w-full mt-6 border-2 border-primary/20 hover:border-primary/40 hover:bg-primary/5 font-semibold py-3 rounded-xl transition-all duration-300"
             >
               <CalendarIcon className="mr-2 h-5 w-5" />
-              Schedule Now
+              Đặt lịch ngay
             </Button>
           </Link>
         </CardContent>

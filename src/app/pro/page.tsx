@@ -49,7 +49,7 @@ async function ProPage() {
             </p>
           </div>
 
-          <PricingTable />
+          {/* <PricingTable /> */}
         </div>
       </div>
     </>

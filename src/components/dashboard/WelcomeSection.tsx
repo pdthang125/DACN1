@@ -10,20 +10,20 @@ export default async function WelcomeSection() {
       <div className="space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
           <div className="size-2 bg-primary rounded-full animate-pulse"></div>
-          <span className="text-sm font-medium text-primary">Online & Ready</span>
+          <span className="text-sm font-medium text-primary">Trực tuyến & Sẵn sàng</span>
         </div>
         <div>
           <h1 className="text-4xl font-bold mb-2">
-            Good{" "}
+            Chào{" "}
             {new Date().getHours() < 12
-              ? "morning"
+              ? "buổi sáng"
               : new Date().getHours() < 18
-              ? "afternoon"
-              : "evening"}
+              ? "buổi chiều"
+              : "buổi tối"}
             , {user?.firstName}!
           </h1>
           <p className="text-muted-foreground">
-            Your personal AI dental assistant is ready to help you maintain perfect oral health.
+            Trợ lý nha khoa AI cá nhân của bạn đã sẵn sàng hỗ trợ chăm sóc sức khỏe răng miệng.
           </p>
         </div>
       </div>
