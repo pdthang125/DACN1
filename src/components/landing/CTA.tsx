@@ -44,7 +44,7 @@ function CTA() {
                 </h2>
 
                 <p className="text-blue-100 text-lg font-medium leading-relaxed max-w-md">
-                  Hơn 1,500 bệnh nhân đã tin tưởng DentWise. Hãy để chúng tôi đồng hành cùng bạn trên hành trình sức khỏe răng miệng.
+                  Hơn 1,500 bệnh nhân đã tin tưởng SmileCare. Hãy để chúng tôi đồng hành cùng bạn trên hành trình sức khỏe răng miệng.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-2">
@@ -74,7 +74,7 @@ function CTA() {
               <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 space-y-4">
                 <h3 className="text-white font-extrabold text-lg mb-6 flex items-center gap-2">
                   <CheckCircle2 className="size-5 text-green-300" />
-                  Tại sao chọn DentWise?
+                  Tại sao chọn SmileCare?
                 </h3>
                 {benefits.map((b) => (
                   <div key={b} className="flex items-start gap-3 group">

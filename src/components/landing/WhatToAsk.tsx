@@ -26,7 +26,7 @@ const chatExamples = [
     icon: Info,
     label: "Tư vấn nhi khoa",
     question: "Khi nào trẻ em nên đi khám răng lần đầu tiên?",
-    answer: "Nên đưa bé đi khám khi mọc chiếc răng sữa đầu tiên (~6 tháng). DentWise kết nối ngay bác sĩ nhi khoa gần bạn.",
+    answer: "Nên đưa bé đi khám khi mọc chiếc răng sữa đầu tiên (~6 tháng). SmileCare kết nối ngay bác sĩ nhi khoa gần bạn.",
     tagColor: "bg-emerald-100 text-emerald-600",
     iconBg: "bg-emerald-50",
     iconColor: "text-emerald-500",
@@ -51,7 +51,7 @@ function WhatToAsk() {
             <span className="text-blue-600">đều có đáp án</span>
           </h2>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
-            AI DentWise được huấn luyện chuyên sâu về nha khoa — giải đáp từ triệu chứng đơn giản đến vấn đề phức tạp trong tích tắc.
+            AI SmileCare được huấn luyện chuyên sâu về nha khoa — giải đáp từ triệu chứng đơn giản đến vấn đề phức tạp trong tích tắc.
           </p>
         </div>
 
@@ -96,7 +96,7 @@ function WhatToAsk() {
             <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-2xl shadow-blue-100">
               <Image
                 src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=2070&auto=format&fit=crop"
-                alt="Bác sĩ nha khoa DentWise"
+                alt="Bác sĩ nha khoa SmileCare"
                 width={600}
                 height={500}
                 className="w-full h-auto object-cover"
@@ -112,7 +112,7 @@ function WhatToAsk() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-xs font-black text-slate-800">Trợ lý AI DentWise</p>
+                      <p className="text-xs font-black text-slate-800">Trợ lý AI SmileCare</p>
                       <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600">
                         <span className="size-1.5 bg-emerald-500 rounded-full animate-pulse" />
                         Trực tuyến

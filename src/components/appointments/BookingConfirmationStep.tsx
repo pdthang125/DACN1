@@ -94,7 +94,7 @@ function BookingConfirmationStep({
                     <MapPinIcon className="size-3.5" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Địa điểm</span>
                   </div>
-                  <p className="font-black text-slate-900">Nha khoa DentWise</p>
+                  <p className="font-black text-slate-900">Nha khoa SmileCare</p>
                   <p className="text-xs text-slate-500 font-medium">TP. Hồ Chí Minh</p>
                 </div>
               </div>
@@ -159,7 +159,7 @@ function BookingConfirmationStep({
 
               <div className="flex items-start gap-2 pt-2 text-[10px] text-slate-500 font-medium leading-relaxed">
                 <CheckCircle2Icon className="size-3 text-emerald-500 shrink-0 mt-0.5" />
-                Bằng cách nhấn xác nhận, bạn đồng ý với các điều khoản dịch vụ và chính sách bảo mật của DentWise.
+                Bằng cách nhấn xác nhận, bạn đồng ý với các điều khoản dịch vụ và chính sách bảo mật của SmileCare.
               </div>
             </CardContent>
           </Card>

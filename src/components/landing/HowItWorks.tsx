@@ -7,7 +7,7 @@ const steps = [
     number: "01",
     icon: MessageCircle,
     title: "Tư vấn với AI 24/7",
-    description: "Hỏi bất kỳ câu nào về răng miệng — AI DentWise phân tích triệu chứng, giải thích nguyên nhân và đề xuất hướng xử lý tức thì, mọi lúc mọi nơi.",
+    description: "Hỏi bất kỳ câu nào về răng miệng — AI SmileCare phân tích triệu chứng, giải thích nguyên nhân và đề xuất hướng xử lý tức thì, mọi lúc mọi nơi.",
     accent: "bg-blue-600",
     lightBg: "bg-blue-50",
     textColor: "text-blue-600",
@@ -29,7 +29,7 @@ const steps = [
     number: "03",
     icon: CalendarCheck,
     title: "Đặt lịch & Hoàn tất",
-    description: "Xác nhận lịch hẹn online chỉ trong vài chạm. Nhận thông báo nhắc lịch tự động và đến phòng khám tận hưởng dịch vụ 5 sao từ DentWise.",
+    description: "Xác nhận lịch hẹn online chỉ trong vài chạm. Nhận thông báo nhắc lịch tự động và đến phòng khám tận hưởng dịch vụ 5 sao từ SmileCare.",
     accent: "bg-indigo-600",
     lightBg: "bg-indigo-50",
     textColor: "text-indigo-600",
@@ -60,7 +60,7 @@ function HowItWorks() {
             </span>
           </h2>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
-            DentWise giúp bạn đi từ lo lắng đến an tâm nhanh nhất có thể — AI tư vấn, bác sĩ đồng hành.
+            SmileCare giúp bạn đi từ lo lắng đến an tâm nhanh nhất có thể — AI tư vấn, bác sĩ đồng hành.
           </p>
         </div>
 

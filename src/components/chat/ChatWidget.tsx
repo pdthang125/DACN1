@@ -179,7 +179,7 @@ export default function ChatWidget() {
                 <div className="absolute -bottom-0.5 -right-0.5 size-3 bg-emerald-500 border-2 border-primary rounded-full"></div>
               </div>
               <div>
-                <h3 className="font-bold text-sm tracking-wide">Trợ lý DentWise</h3>
+                <h3 className="font-bold text-sm tracking-wide">Trợ lý SmileCare</h3>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Trực tuyến</span>
                 </div>
@@ -204,7 +204,7 @@ export default function ChatWidget() {
                 </div>
                 <h4 className="font-bold text-foreground mb-2">Xin chào! 👋</h4>
                 <p className="text-sm text-muted-foreground px-8 font-medium">
-                  Em là trợ lý AI của DentWise. Rất vui được hỗ trợ Anh/Chị về các vấn đề nha khoa.
+                  Em là trợ lý AI của SmileCare. Rất vui được hỗ trợ Anh/Chị về các vấn đề nha khoa.
                 </p>
                 
                 <div className="mt-8 grid grid-cols-1 gap-2 px-4">

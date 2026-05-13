@@ -13,9 +13,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DentWise - Nha Khoa Thông Minh với AI",
-  description: "DentWise kết hợp đội ngũ bác sĩ tâm huyết cùng trí tuệ nhân tạo để mang đến trải nghiệm chăm sóc răng miệng thông minh, nhẹ nhàng và minh bạch nhất.",
-  keywords: ["nha khoa", "AI", "đặt lịch khám", "tư vấn răng miệng", "DentWise"],
+  title: "SmileCare - Nha Khoa Thông Minh với AI",
+  description: "SmileCare kết hợp đội ngũ bác sĩ tâm huyết cùng trí tuệ nhân tạo để mang đến trải nghiệm chăm sóc răng miệng thông minh, nhẹ nhàng và minh bạch nhất.",
+  keywords: ["nha khoa", "AI", "đặt lịch khám", "tư vấn răng miệng", "SmileCare"],
 };
 
 export default function RootLayout({

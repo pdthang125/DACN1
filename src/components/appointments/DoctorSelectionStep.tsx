@@ -83,7 +83,7 @@ function DoctorSelectionStep({
                 <div className="space-y-2.5 pt-2 border-t border-slate-50">
                   <div className="flex items-center gap-2 text-slate-400">
                     <MapPinIcon className="size-3.5 text-blue-400" />
-                    <span className="text-xs font-medium">Hệ thống DentWise</span>
+                    <span className="text-xs font-medium">Hệ thống SmileCare</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-400">
                     <PhoneIcon className="size-3.5 text-blue-400" />

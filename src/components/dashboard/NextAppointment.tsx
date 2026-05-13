@@ -82,7 +82,7 @@ async function NextAppointment() {
             </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Địa điểm</p>
-              <p className="text-sm font-bold text-slate-900">Nha khoa DentWise</p>
+              <p className="text-sm font-bold text-slate-900">Nha khoa SmileCare</p>
             </div>
           </div>
         </div>

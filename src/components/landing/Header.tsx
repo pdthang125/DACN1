@@ -42,7 +42,7 @@ function Header() {
               </svg>
             </div>
             <span className="font-black text-xl text-white tracking-tight">
-              Dent<span className="text-blue-200">Wise</span>
+              Smile<span className="text-blue-200">Care</span>
             </span>
           </Link>
 

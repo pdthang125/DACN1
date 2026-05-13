@@ -145,7 +145,7 @@ export async function POST(req: NextRequest) {
 
     if (isSystemResult && lastResult?.action === "bookAppointment") {
       const a = lastResult.data as { doctorName: string; date: string; time: string; reason: string };
-      return NextResponse.json({ reply: `✅ **Đặt lịch thành công!**\n\n👨‍⚕️ Bác sĩ: **${a.doctorName}**\n📅 Ngày: **${a.date}**\n⏰ Giờ: **${a.time}**\n📋 Lý do: **${a.reason}**\n\nNha khoa DentWise đã ghi nhận lịch hẹn của Anh/Chị! Nhớ đến đúng giờ nhé! 😊` });
+      return NextResponse.json({ reply: `✅ **Đặt lịch thành công!**\n\n👨‍⚕️ Bác sĩ: **${a.doctorName}**\n📅 Ngày: **${a.date}**\n⏰ Giờ: **${a.time}**\n📋 Lý do: **${a.reason}**\n\nNha khoa SmileCare đã ghi nhận lịch hẹn của Anh/Chị! Nhớ đến đúng giờ nhé! 😊` });
     }
 
     if (isSystemResult && lastResult?.action === "getMyAppointments") {
@@ -196,15 +196,15 @@ export async function POST(req: NextRequest) {
     const intent = detectIntent(userText);
 
     const responses: Record<string, string> = {
-      greeting: `Dạ, xin chào Anh/Chị! 😊 Em là lễ tân AI của **Nha khoa DentWise** 🦷\n\nEm có thể giúp:\n• 💰 Tư vấn bảng giá\n• 📅 Đặt lịch khám\n• 👨‍⚕️ Xem danh sách bác sĩ\n• 📋 Kiểm tra lịch hẹn\n\nAnh/Chị cần gì ạ?`,
-      price: `Dạ, **Bảng giá dịch vụ** Nha khoa DentWise:\n\n• 🔍 Khám tổng quát & Tư vấn: **Miễn phí**\n• 🦷 Cạo vôi răng: **300.000 VNĐ**\n• 🔧 Nhổ răng khôn (mọc thẳng): **1.000.000 VNĐ**\n• 🔧 Nhổ răng khôn (mọc ngầm): **2.500.000 VNĐ**\n• ✨ Tẩy trắng Laser: **2.000.000 VNĐ**\n• 👑 Bọc răng sứ: **3.000.000 - 8.000.000 VNĐ/răng**\n• 📎 Niềng răng mắc cài: **30.000.000 VNĐ/trọn gói**\n\nAnh/Chị quan tâm đến dịch vụ nào ạ?`,
-      hours: `🕗 Nha khoa DentWise làm việc:\n\n**8:00 Sáng — 8:00 Tối**\n📅 **Tất cả các ngày trong tuần**\n\nAnh/Chị có muốn đặt lịch không ạ?`,
+      greeting: `Dạ, xin chào Anh/Chị! 😊 Em là lễ tân AI của **Nha khoa SmileCare** 🦷\n\nEm có thể giúp:\n• 💰 Tư vấn bảng giá\n• 📅 Đặt lịch khám\n• 👨‍⚕️ Xem danh sách bác sĩ\n• 📋 Kiểm tra lịch hẹn\n\nAnh/Chị cần gì ạ?`,
+      price: `Dạ, **Bảng giá dịch vụ** Nha khoa SmileCare:\n\n• 🔍 Khám tổng quát & Tư vấn: **Miễn phí**\n• 🦷 Cạo vôi răng: **300.000 VNĐ**\n• 🔧 Nhổ răng khôn (mọc thẳng): **1.000.000 VNĐ**\n• 🔧 Nhổ răng khôn (mọc ngầm): **2.500.000 VNĐ**\n• ✨ Tẩy trắng Laser: **2.000.000 VNĐ**\n• 👑 Bọc răng sứ: **3.000.000 - 8.000.000 VNĐ/răng**\n• 📎 Niềng răng mắc cài: **30.000.000 VNĐ/trọn gói**\n\nAnh/Chị quan tâm đến dịch vụ nào ạ?`,
+      hours: `🕗 Nha khoa SmileCare làm việc:\n\n**8:00 Sáng — 8:00 Tối**\n📅 **Tất cả các ngày trong tuần**\n\nAnh/Chị có muốn đặt lịch không ạ?`,
       address: `📍 **123 Đường ABC, Quận 1, TP.HCM**\n🕗 Giờ làm việc: 8:00 - 20:00 mỗi ngày\n\nAnh/Chị có muốn đặt lịch hẹn không ạ?`,
-      services: `Dạ, Nha khoa DentWise cung cấp:\n\n1. 🔍 Khám Tổng Quát (60 phút)\n2. 🦷 Cạo Vôi Răng (45 phút)\n3. 💬 Tư Vấn (30 phút - Miễn phí)\n4. 🚨 Khám Cấp Cứu (30 phút)\n5. ✨ Tẩy trắng răng Laser\n6. 👑 Bọc răng sứ thẩm mỹ\n7. 📎 Niềng răng mắc cài\n\nAnh/Chị muốn đặt lịch không ạ?`,
+      services: `Dạ, Nha khoa SmileCare cung cấp:\n\n1. 🔍 Khám Tổng Quát (60 phút)\n2. 🦷 Cạo Vôi Răng (45 phút)\n3. 💬 Tư Vấn (30 phút - Miễn phí)\n4. 🚨 Khám Cấp Cứu (30 phút)\n5. ✨ Tẩy trắng răng Laser\n6. 👑 Bọc răng sứ thẩm mỹ\n7. 📎 Niềng răng mắc cài\n\nAnh/Chị muốn đặt lịch không ạ?`,
       doctors: `Dạ, để xem danh sách bác sĩ, em tra hệ thống ngay nhé!\n[ACTION]{"action":"getDoctors"}[/ACTION]`,
       book: `Dạ, em sẽ giúp Anh/Chị đặt lịch! 📅 Em tra danh sách bác sĩ ngay nhé!\n[ACTION]{"action":"getDoctors"}[/ACTION]`,
       my_appointments: `Dạ, em kiểm tra lịch hẹn của Anh/Chị ngay!\n[ACTION]{"action":"getMyAppointments"}[/ACTION]`,
-      thanks: `Dạ, không có gì ạ! 😊 Nha khoa DentWise luôn sẵn sàng hỗ trợ Anh/Chị!`,
+      thanks: `Dạ, không có gì ạ! 😊 Nha khoa SmileCare luôn sẵn sàng hỗ trợ Anh/Chị!`,
       bye: `Dạ, tạm biệt Anh/Chị! 👋 Chúc Anh/Chị sức khỏe thật tốt! 🦷✨`,
     };
 

@@ -101,7 +101,7 @@ function Hero() {
                 <div className="relative rounded-[2.5rem] overflow-hidden border-4 border-white/30 shadow-2xl shadow-blue-900/50">
                   <Image
                     src="/modern_dental_hero_1778662471313.png"
-                    alt="DentWise Dental Clinic"
+                    alt="SmileCare Dental Clinic"
                     width={560}
                     height={560}
                     className="w-full h-auto object-cover"

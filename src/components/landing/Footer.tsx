@@ -57,7 +57,7 @@ function Footer() {
                 </svg>
               </div>
               <span className="font-black text-xl text-white">
-                Dent<span className="text-blue-400">Wise</span>
+                Smile<span className="text-blue-400">Care</span>
               </span>
             </div>
 
@@ -112,7 +112,7 @@ function Footer() {
         <div className="border-t border-slate-800 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-slate-500 text-center md:text-left">
-              © 2025 DentWise. Được xây dựng với ❤️ cho sức khỏe răng miệng cộng đồng Việt Nam.
+              © 2025 SmileCare. Được xây dựng với ❤️ cho sức khỏe răng miệng cộng đồng Việt Nam.
             </p>
             <div className="flex items-center gap-3">
               <span className="text-xs text-slate-600 font-medium">Ngôn ngữ:</span>
