@@ -121,6 +121,8 @@ interface BookAppointmentInput {
   date: string;
   time: string;
   reason?: string;
+  phoneNumber?: string;
+  symptom?: string;
 }
 
 export async function bookAppointment(input: BookAppointmentInput) {
@@ -137,13 +139,16 @@ export async function bookAppointment(input: BookAppointmentInput) {
 
     const appointment = await prisma.appointment.create({
       data: {
-        userId: user.id,
-        doctorId: input.doctorId,
-        date: new Date(input.date),
-        time: input.time,
-        reason: input.reason || "General consultation",
-        status: "CONFIRMED",
-      },
+  userId: user.id,
+  doctorId: input.doctorId,
+  date: new Date(input.date),
+  time: input.time,
+  reason: input.reason || "General consultation",
+  symptom: input.reason || "Khám tổng quát",
+  phoneNumber: input.phoneNumber,
+  notes: input.symptom,
+  status: "CONFIRMED",
+},
       include: {
         user: {
           select: {
@@ -172,7 +177,7 @@ export async function updateAppointmentStatus(input: { id: string; status: Appoi
 
     return appointment;
   } catch (error) {
-    console.error("Error updating appointment:", error);
-    throw new Error("Failed to update appointment");
-  }
+  console.error("Error booking appointment:", error);
+  throw error;
+}
 }

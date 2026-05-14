@@ -1,3 +1,4 @@
+"use client";
 import { useCreateDoctor } from "@/hooks/use-doctors";
 import { Gender } from "@prisma/client";
 import { useState } from "react";
@@ -54,7 +55,12 @@ function AddDoctorDialog({ isOpen, onClose }: AddDoctorDialogProps) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog
+  open={isOpen}
+  onOpenChange={(open) => {
+    if (!open) handleClose();
+  }}
+>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Add New Doctor</DialogTitle>

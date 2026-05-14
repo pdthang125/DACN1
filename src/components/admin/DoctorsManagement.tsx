@@ -1,3 +1,4 @@
+"use client";
 import { useGetDoctors } from "@/hooks/use-doctors";
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -28,14 +29,14 @@ function DoctorsManagement() {
 
   return (
     <>
-      <Card className="mb-12">
+      <Card className="mb-12 border-0 shadow-sm rounded-[2rem]">
         <CardHeader className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">
               <StethoscopeIcon className="size-5 text-primary" />
-              Doctors Management
+              Quản lý bác sĩ
             </CardTitle>
-            <CardDescription>Manage and oversee all doctors in your practice</CardDescription>
+            <CardDescription>Quản lý thông tin và hoạt động của đội ngũ bác sĩ</CardDescription>
           </div>
 
           <Button
@@ -43,7 +44,7 @@ function DoctorsManagement() {
             className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/100"
           >
             <PlusIcon className="mr-2 size-4" />
-            Add Doctor
+            Thêm bác sĩ
           </Button>
         </CardHeader>
 
@@ -52,7 +53,7 @@ function DoctorsManagement() {
             {doctors.map((doctor) => (
               <div
                 key={doctor.id}
-                className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border/50"
+                className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition-all duration-300"
               >
                 <div className="flex items-center gap-4">
                   <Image
@@ -69,7 +70,7 @@ function DoctorsManagement() {
                       {doctor.speciality}
 
                       <span className="ml-2 px-2 py-0.5 bg-muted rounded text-xs">
-                        {doctor.gender === "MALE" ? "Male" : "Female"}
+                        {doctor.gender === "MALE" ? "Nam" : "Nữ"}
                       </span>
                     </div>
 
@@ -89,13 +90,13 @@ function DoctorsManagement() {
                 <div className="flex items-center gap-3">
                   <div className="text-center">
                     <div className="font-semibold text-primary">{doctor.appointmentCount}</div>
-                    <div className="text-xs text-muted-foreground">Appointments</div>
+                    <div className="text-xs text-muted-foreground">Lịch hẹn</div>
                   </div>
 
                   {doctor.isActive ? (
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active</Badge>
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Đang hoạt động</Badge>
                   ) : (
-                    <Badge variant="secondary">Inactive</Badge>
+                    <Badge variant="secondary">Ngưng hoạt động</Badge>
                   )}
                   <Button
                     size="sm"
@@ -104,7 +105,7 @@ function DoctorsManagement() {
                     onClick={() => handleEditDoctor(doctor)}
                   >
                     <EditIcon className="size-4 mr-1" />
-                    Edit
+                    Chỉnh sửa
                   </Button>
                 </div>
               </div>
