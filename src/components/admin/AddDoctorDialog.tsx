@@ -1,7 +1,9 @@
 "use client";
+
 import { useCreateDoctor } from "@/hooks/use-doctors";
 import { Gender } from "@prisma/client";
 import { useState } from "react";
+
 import {
   Dialog,
   DialogContent,
@@ -10,10 +12,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+
 import { Button } from "../ui/button";
+
 import { formatPhoneNumber } from "@/lib/utils";
 
 interface AddDoctorDialogProps {
@@ -21,34 +33,59 @@ interface AddDoctorDialogProps {
   onClose: () => void;
 }
 
-function AddDoctorDialog({ isOpen, onClose }: AddDoctorDialogProps) {
-  const [newDoctor, setNewDoctor] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    speciality: "",
-    gender: "MALE" as Gender,
-    isActive: true,
-  });
+function AddDoctorDialog({
+  isOpen,
+  onClose,
+}: AddDoctorDialogProps) {
 
-  const createDoctorMutation = useCreateDoctor();
+  const [newDoctor, setNewDoctor] =
+    useState({
+      name: "",
+      email: "",
+      phone: "",
+      speciality: "",
+      bio: "",
+      imageUrl:
+        "/doctor/doctor1.png",
+      gender: "MALE" as Gender,
+      isActive: true,
+    });
 
-  const handlePhoneChange = (value: string) => {
-    const formattedPhoneNumber = formatPhoneNumber(value);
-    setNewDoctor({ ...newDoctor, phone: formattedPhoneNumber });
+  const createDoctorMutation =
+    useCreateDoctor();
+
+  const handlePhoneChange = (
+    value: string
+  ) => {
+    const formattedPhoneNumber =
+      formatPhoneNumber(value);
+
+    setNewDoctor({
+      ...newDoctor,
+      phone: formattedPhoneNumber,
+    });
   };
 
   const handleSave = () => {
-    createDoctorMutation.mutate({ ...newDoctor }, { onSuccess: handleClose });
+    createDoctorMutation.mutate(
+      { ...newDoctor },
+      {
+        onSuccess: handleClose,
+      }
+    );
   };
 
   const handleClose = () => {
     onClose();
+
     setNewDoctor({
       name: "",
       email: "",
       phone: "",
       speciality: "",
+      bio: "",
+      imageUrl:
+        "/doctor/doctor1.png",
       gender: "MALE",
       isActive: true,
     });
@@ -56,99 +93,228 @@ function AddDoctorDialog({ isOpen, onClose }: AddDoctorDialogProps) {
 
   return (
     <Dialog
-  open={isOpen}
-  onOpenChange={(open) => {
-    if (!open) handleClose();
-  }}
->
-      <DialogContent className="sm:max-w-[500px]">
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) handleClose();
+      }}
+    >
+      <DialogContent className="sm:max-w-2xl">
+
         <DialogHeader>
-          <DialogTitle>Add New Doctor</DialogTitle>
-          <DialogDescription>Add a new doctor to your practice.</DialogDescription>
+          <DialogTitle>
+            Thêm bác sĩ mới
+          </DialogTitle>
+
+          <DialogDescription>
+            Thêm bác sĩ vào hệ thống SmileCare
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="new-name">Name *</Label>
-              <Input
-                id="new-name"
-                value={newDoctor.name}
-                onChange={(e) => setNewDoctor({ ...newDoctor, name: e.target.value })}
-                placeholder="Dr. John Smith"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-speciality">Speciality *</Label>
-              <Input
-                id="new-speciality"
-                value={newDoctor.speciality}
-                onChange={(e) => setNewDoctor({ ...newDoctor, speciality: e.target.value })}
-                placeholder="General Dentistry"
-              />
-            </div>
+        <div className="grid gap-5 py-4">
+
+          {/* IMAGE URL */}
+          <div className="space-y-2">
+            <Label>
+              Ảnh bác sĩ
+            </Label>
+
+            <Input
+              value={newDoctor.imageUrl}
+              onChange={(e) =>
+                setNewDoctor({
+                  ...newDoctor,
+                  imageUrl:
+                    e.target.value,
+                })
+              }
+              placeholder="/doctor/doctor1.png"
+            />
           </div>
 
+          {/* NAME + SPECIALITY */}
+          <div className="grid grid-cols-2 gap-4">
+
+            <div className="space-y-2">
+              <Label>
+                Họ tên *
+              </Label>
+
+              <Input
+                value={newDoctor.name}
+                onChange={(e) =>
+                  setNewDoctor({
+                    ...newDoctor,
+                    name:
+                      e.target.value,
+                  })
+                }
+                placeholder="VD: Nguyễn Minh Anh"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>
+                Chuyên khoa *
+              </Label>
+
+              <Input
+                value={
+                  newDoctor.speciality
+                }
+                onChange={(e) =>
+                  setNewDoctor({
+                    ...newDoctor,
+                    speciality:
+                      e.target.value,
+                  })
+                }
+                placeholder="VD: Chỉnh nha"
+              />
+            </div>
+
+          </div>
+
+          {/* EMAIL */}
           <div className="space-y-2">
-            <Label htmlFor="new-email">Email *</Label>
+            <Label>Email *</Label>
+
             <Input
-              id="new-email"
               type="email"
               value={newDoctor.email}
-              onChange={(e) => setNewDoctor({ ...newDoctor, email: e.target.value })}
-              placeholder="doctor@example.com"
+              onChange={(e) =>
+                setNewDoctor({
+                  ...newDoctor,
+                  email:
+                    e.target.value,
+                })
+              }
+              placeholder="doctor@gmail.com"
             />
           </div>
+
+          {/* PHONE */}
           <div className="space-y-2">
-            <Label htmlFor="new-phone">Phone</Label>
+            <Label>
+              Số điện thoại
+            </Label>
+
             <Input
-              id="new-phone"
               value={newDoctor.phone}
-              onChange={(e) => handlePhoneChange(e.target.value)}
-              placeholder="(555) 123-4567"
+              onChange={(e) =>
+                handlePhoneChange(
+                  e.target.value
+                )
+              }
+              placeholder="0905123456"
             />
           </div>
 
+          {/* BIO */}
+          <div className="space-y-2">
+            <Label>
+              Giới thiệu bác sĩ
+            </Label>
+
+            <Input
+              value={newDoctor.bio}
+              onChange={(e) =>
+                setNewDoctor({
+                  ...newDoctor,
+                  bio:
+                    e.target.value,
+                })
+              }
+              placeholder="Mô tả ngắn về bác sĩ..."
+            />
+          </div>
+
+          {/* GENDER + STATUS */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="new-gender">Gender</Label>
-              <Select
-                value={newDoctor.gender || ""}
-                onValueChange={(value) => setNewDoctor({ ...newDoctor, gender: value as Gender })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="MALE">Male</SelectItem>
-                  <SelectItem value="FEMALE">Female</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
             <div className="space-y-2">
-              <Label htmlFor="new-status">Status</Label>
+              <Label>
+                Giới tính
+              </Label>
+
               <Select
-                value={newDoctor.isActive ? "active" : "inactive"}
-                onValueChange={(value) =>
-                  setNewDoctor({ ...newDoctor, isActive: value === "active" })
+                value={
+                  newDoctor.gender
+                }
+                onValueChange={(
+                  value
+                ) =>
+                  setNewDoctor({
+                    ...newDoctor,
+                    gender:
+                      value as Gender,
+                  })
                 }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
+
                 <SelectContent>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="MALE">
+                    Nam
+                  </SelectItem>
+
+                  <SelectItem value="FEMALE">
+                    Nữ
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="space-y-2">
+              <Label>
+                Trạng thái
+              </Label>
+
+              <Select
+                value={
+                  newDoctor.isActive
+                    ? "active"
+                    : "inactive"
+                }
+                onValueChange={(
+                  value
+                ) =>
+                  setNewDoctor({
+                    ...newDoctor,
+                    isActive:
+                      value ===
+                      "active",
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value="active">
+                    Đang hoạt động
+                  </SelectItem>
+
+                  <SelectItem value="inactive">
+                    Tạm ngưng
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
           </div>
+
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={handleClose}>
-            Cancel
+
+          <Button
+            variant="outline"
+            onClick={handleClose}
+          >
+            Huỷ
           </Button>
 
           <Button
@@ -161,9 +327,13 @@ function AddDoctorDialog({ isOpen, onClose }: AddDoctorDialogProps) {
               createDoctorMutation.isPending
             }
           >
-            {createDoctorMutation.isPending ? "Adding..." : "Add Doctor"}
+            {createDoctorMutation.isPending
+              ? "Đang thêm..."
+              : "Thêm bác sĩ"}
           </Button>
+
         </DialogFooter>
+
       </DialogContent>
     </Dialog>
   );

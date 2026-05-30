@@ -1,95 +1,166 @@
 "use client";
+
 import AdminStats from "@/components/admin/AdminStats";
 import DoctorsManagement from "@/components/admin/DoctorsManagement";
 import RecentAppointments from "@/components/admin/RecentAppointments";
 import AppointmentsChart from "@/components/admin/AppointmentsChart";
 import SystemStatus from "@/components/admin/SystemStatus";
+import { useState } from "react";
+
+import AddDoctorDialog from "@/components/admin/AddDoctorDialog";
+
 import { useAdminStats } from "@/hooks/use-admin";
+import RecentDoctors from "@/components/admin/RecentDoctors";
 
 export default function AdminDashboardPage() {
   const { data: stats } = useAdminStats();
+  const [
+    isAddDoctorOpen,
+    setIsAddDoctorOpen,
+  ] = useState(false);
+
   return (
-    <div className="space-y-10">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 shadow-sm p-10">
-        {/* Background blur */}
-        <div className="absolute top-0 right-0 w-72 h-72 bg-blue-100 rounded-full blur-3xl opacity-40" />
+    <div className="space-y-8">
 
-        <div className="relative z-10 flex items-center justify-between gap-8">
-          {/* Left content */}
-          <div>
-            <p className="text-blue-600 font-black uppercase tracking-[0.3em] text-xs">
-              HỆ THỐNG NHA KHOA THÔNG MINH
-            </p>
+      {/* HERO */}
+      <section className="relative overflow-hidden rounded-[32px] border border-slate-200/70 bg-white p-10 shadow-sm">
 
-            <h1 className="text-5xl font-black text-slate-900 mt-4 leading-tight">
-              Bảng điều khiển quản trị
+        {/* Background */}
+        <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl opacity-60" />
+
+        <div className="absolute bottom-0 left-0 h-48 w-48 rounded-full bg-indigo-100 blur-3xl opacity-40" />
+
+        <div className="relative z-10 flex flex-col gap-10 xl:flex-row xl:items-center xl:justify-between">
+
+          {/* LEFT */}
+          <div className="max-w-3xl">
+
+            {/* Label */}
+            <div className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+              Nền tảng quản trị AI SmileCare
+            </div>
+
+            {/* Heading */}
+            <h1 className="mt-6 text-5xl font-black leading-[1.1] tracking-tight text-slate-900 xl:text-6xl">
+              Bảng điều khiển quản trị nha khoa
             </h1>
 
-            <p className="text-slate-500 mt-5 text-lg max-w-2xl leading-relaxed">
-              Nền tảng quản lý phòng khám nha khoa tích hợp trí tuệ nhân tạo hỗ trợ đặt lịch,
-              quản lý bác sĩ và theo dõi tình trạng khách hàng theo thời gian thực.
+            {/* Description */}
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-500">
+              Theo dõi hoạt động phòng khám theo thời gian thực, quản lý lịch hẹn,
+              bác sĩ, khách hàng và hệ thống AI hỗ trợ vận hành trên một nền tảng duy nhất.
             </p>
 
-            {/* Status badges */}
-            <div className="flex flex-wrap items-center gap-3 mt-7">
-              <div className="flex items-center gap-4 mt-8">
-  <button className="h-12 px-6 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-200 transition-all">
-    + Thêm lịch hẹn
-  </button>
+            {/* Buttons */}
+            <div className="mt-8 flex flex-wrap items-center gap-4">
 
-  <button className="h-12 px-6 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 text-slate-700 font-bold transition-all">
-    + Thêm bác sĩ
-  </button>
-</div>
-              <div className="px-4 py-2 rounded-2xl bg-blue-50 text-blue-700 text-sm font-bold shadow-sm">
-                AI Assistant Online
+
+
+              <button
+                onClick={() =>
+                  setIsAddDoctorOpen(true)
+                }
+                className="h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 text-base font-bold text-white shadow-lg shadow-blue-200 transition-all hover:scale-[1.02] hover:shadow-blue-300"
+              >
+                + Thêm bác sĩ
+              </button>
+
+            </div>
+
+            {/* Status */}
+            <div className="mt-8 flex flex-wrap gap-3">
+
+              <div className="rounded-2xl bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+                ● Hệ thống hoạt động ổn định
               </div>
 
-              <div className="px-4 py-2 rounded-2xl bg-emerald-50 text-emerald-700 text-sm font-bold shadow-sm">
-                Hệ thống hoạt động ổn định
+              <div className="rounded-2xl bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                ● AI Assistant Online
               </div>
 
-              <div className="px-4 py-2 rounded-2xl bg-slate-100 text-slate-700 text-sm font-bold shadow-sm">
-                Cập nhật realtime
+              <div className="rounded-2xl bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-700">
+                ● Đồng bộ dữ liệu realtime
               </div>
+
             </div>
           </div>
 
-          {/* Right icon */}
-          <div className="hidden lg:flex">
-            <div className="relative w-36 h-36 rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-2xl shadow-blue-200 overflow-hidden">
+          {/* RIGHT */}
+          <div className="hidden xl:block">
+
+            <div className="relative overflow-hidden rounded-[32px] border border-white/40 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-500 p-10 shadow-2xl shadow-blue-200">
+
               <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl" />
 
-              <div className="relative z-10 text-6xl">
-                🦷
+              <div className="relative z-10">
+
+                <div className="text-7xl">
+                  🦷
+                </div>
+
+                <div className="mt-8 space-y-4">
+
+                  <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-xl">
+                    <p className="text-sm text-blue-100">
+                      Tổng lịch hẹn hôm nay
+                    </p>
+
+                    <h3 className="mt-2 text-4xl font-black text-white">
+                      {stats?.todayAppointments || 0}
+                    </h3>
+                  </div>
+
+                  <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-xl">
+                    <p className="text-sm text-blue-100">
+                      Tỷ lệ hoàn thành lịch hẹn
+                    </p>
+
+                    <h3 className="mt-2 text-4xl font-black text-white">
+                      {stats?.completionRate || 0}%
+                    </h3>
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </section>
+
+      {/* STATS */}
+      <AdminStats
+        totalDoctors={stats?.totalDoctors || 0}
+        activeDoctors={stats?.activeDoctors || 0}
+        totalAppointments={stats?.totalAppointments || 0}
+        completedAppointments={stats?.completedAppointments || 0}
+
+        completionRate={stats?.completionRate || 0}
+        activeDoctorRate={stats?.activeDoctorRate || 0}
+        weeklyAppointments={stats?.weeklyAppointments || 0}
+      />
+
+      {/* CHART + STATUS */}
+      <div className="grid gap-8 lg:grid-cols-3">
+
+        <div className="lg:col-span-2">
+          <AppointmentsChart />
+        </div>
+
+        <SystemStatus />
+
       </div>
 
-      {/* Stats */}
-      <AdminStats
-  totalDoctors={stats?.totalDoctors || 0}
-  activeDoctors={stats?.activeDoctors || 0}
-  totalAppointments={stats?.totalAppointments || 0}
-  completedAppointments={stats?.completedAppointments || 0}
-/>
-
-      <div className="grid lg:grid-cols-3 gap-8">
-  <div className="lg:col-span-2">
-    <AppointmentsChart />
-  </div>
-
-  <SystemStatus />
-</div>
-
-      {/* Appointments */}
+      {/* RECENT APPOINTMENTS */}
       <RecentAppointments />
 
-      {/* Doctors */}
-      <DoctorsManagement />
+      {/* DOCTORS */}
+      <RecentDoctors />
+      <AddDoctorDialog
+        isOpen={isAddDoctorOpen}
+        onClose={() =>
+          setIsAddDoctorOpen(false)
+        }
+      />
     </div>
   );
 }

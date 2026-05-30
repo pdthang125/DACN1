@@ -1,6 +1,12 @@
 "use client";
 
-import { UserButton, useUser } from "@clerk/nextjs";
+import {
+  UserButton,
+  useUser,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+} from "@clerk/nextjs";
 import { CalendarIcon, HomeIcon, MicIcon, Sparkles } from "lucide-react";
 import Link from "next/image"; // Error here? Wait, Navbar uses next/link
 import NextLink from "next/link";
@@ -41,11 +47,10 @@ function Navbar() {
                 <NextLink
                   key={href}
                   href={href}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-                    isActive
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${isActive
                       ? "bg-white text-blue-700 shadow-md"
                       : "text-blue-100 hover:text-white hover:bg-white/10"
-                  }`}
+                    }`}
                 >
                   <Icon className={`w-4 h-4 ${isActive ? "text-blue-600" : ""}`} />
                   <span>{label}</span>
@@ -57,23 +62,63 @@ function Navbar() {
 
         {/* RIGHT SECTION */}
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="hidden lg:flex flex-col items-end mr-2">
-              <span className="text-sm font-black text-white leading-tight">
-                {user?.firstName} {user?.lastName}
-              </span>
-              <span className="text-[10px] text-blue-200 font-bold uppercase tracking-wider">
-                Thành viên Bạc
-              </span>
+
+          <SignedOut>
+
+            <SignInButton mode="modal">
+
+              <button className="rounded-xl bg-white px-5 py-2 font-bold text-blue-700 shadow-lg transition hover:scale-105">
+
+                Đăng nhập
+
+              </button>
+
+            </SignInButton>
+
+          </SignedOut>
+
+          <SignedIn>
+
+            <div className="flex items-center gap-3">
+
+              <div className="mr-2 hidden flex-col items-end lg:flex">
+
+                <span className="text-sm font-black leading-tight text-white">
+
+                  {user?.firstName} {user?.lastName}
+
+                </span>
+
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-200">
+
+                  Thành viên Bạc
+
+                </span>
+
+              </div>
+
+              <div className="size-10 rounded-full border-2 border-white/20 p-0.5 shadow-lg">
+
+                <UserButton
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox:
+                        "size-full",
+                    },
+                  }}
+                />
+
+              </div>
+
             </div>
 
-            <div className="size-10 rounded-full border-2 border-white/20 p-0.5 shadow-lg">
-              <UserButton appearance={{ elements: { userButtonAvatarBox: "size-full" } }} />
-            </div>
-          </div>
+          </SignedIn>
+
         </div>
-      </div>
-    </nav>
+        
+     
+    </div>
+    </nav >
   );
 }
 
