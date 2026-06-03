@@ -1,98 +1,101 @@
-import { useGetAppointments, useUpdateAppointmentStatus } from "@/hooks/use-appointment";
-import { Badge } from "../ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Calendar } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { Button } from "../ui/button";
+"use client";
+
+import {
+  useGetAppointments,
+} from "@/hooks/use-appointment";
 
 function RecentAppointments() {
-  const { data: appointments = [] } = useGetAppointments();
-  const updateAppointmentMutation = useUpdateAppointmentStatus();
 
-  const handleToggleAppointmentStatus = (appointmentId: string) => {
-    const appointment = appointments.find((apt) => apt.id === appointmentId);
-
-    const newStatus = appointment?.status === "CONFIRMED" ? "COMPLETED" : "CONFIRMED";
-
-    updateAppointmentMutation.mutate({ id: appointmentId, status: newStatus });
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "CONFIRMED":
-        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Confirmed</Badge>;
-      case "COMPLETED":
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Completed</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
+  const {
+    data: appointments = [],
+  } = useGetAppointments();
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-primary" />
-          Recent Appointments
-        </CardTitle>
-        <CardDescription>Monitor and manage all patient appointments</CardDescription>
-      </CardHeader>
+    <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
 
-      <CardContent>
-        <div className="rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Patient</TableHead>
-                <TableHead>Doctor</TableHead>
-                <TableHead>Date & Time</TableHead>
-                <TableHead>Reason</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
+      <div className="mb-6 flex items-center justify-between">
 
-            <TableBody>
-              {appointments.map((appointment) => (
-                <TableRow key={appointment.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{appointment.patientName}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {appointment.patientEmail}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium">{appointment.doctorName}</TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">
-                        {new Date(appointment.date).toLocaleDateString()}
-                      </div>
-                      <div className="text-sm text-muted-foreground">{appointment.time}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{appointment.reason}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleToggleAppointmentStatus(appointment.id)}
-                      className="h-6 px-2"
-                    >
-                      {getStatusBadge(appointment.status)}
-                    </Button>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="text-xs text-muted-foreground">Click status to toggle</div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <div>
+
+          <h2 className="text-2xl font-black text-slate-900">
+            Lịch hẹn gần đây
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Theo dõi nhanh lịch khám mới nhất
+          </p>
+
         </div>
-      </CardContent>
-    </Card>
+
+      </div>
+
+      <div className="space-y-5">
+
+        {appointments
+          .slice(0, 3)
+          .map((appointment) => (
+
+            <div
+              key={appointment.id}
+              className="flex items-center justify-between rounded-2xl border border-slate-100 p-5 transition-all hover:bg-slate-50"
+            >
+
+              <div className="flex items-center gap-4">
+
+                <img
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    appointment.patientName
+                  )}&background=2563eb&color=ffffff`}
+                  alt={
+                    appointment.patientName
+                  }
+                  className="h-12 w-12 rounded-full"
+                />
+
+                <div>
+
+                  <h3 className="font-bold text-slate-900">
+                    {
+                      appointment.patientName
+                    }
+                  </h3>
+
+                  <p className="text-sm text-slate-500">
+                    {
+                      appointment.doctorName
+                    }
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div className="text-right">
+
+                <p className="font-bold text-slate-900">
+                  {
+                    appointment.time
+                  }
+                </p>
+
+                <p className="text-sm text-slate-500">
+
+                  {new Date(
+                    appointment.date
+                  ).toLocaleDateString(
+                    "vi-VN"
+                  )}
+
+                </p>
+
+              </div>
+
+            </div>
+          ))}
+
+      </div>
+
+    </div>
   );
 }
 

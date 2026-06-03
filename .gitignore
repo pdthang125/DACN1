@@ -22,8 +22,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (Sẽ được đẩy lên theo ý bạn)
-# .env*
+# env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
 .vercel
@@ -35,7 +39,7 @@ next-env.d.ts
 # prisma
 /src/generated/prisma
 
-# python/AI (Thường rất nặng, không nên đẩy lên)
+# python/AI
 venv/
 .venv/
 __pycache__/
@@ -44,3 +48,10 @@ __pycache__/
 .ipynb_checkpoints/
 training/models/
 training/output/
+training/yolo/dataset/
+training/yolo/datasets/
+training/yolo/runs/
+training/yolo/venv/
+training/yolo/venv_312/
+*.pt
+*.zip

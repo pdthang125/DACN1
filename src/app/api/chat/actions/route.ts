@@ -21,58 +21,163 @@ export async function POST(req: NextRequest) {
           },
           orderBy: { name: "asc" },
         });
-        return NextResponse.json({ success: true, data: doctors });
+
+        return NextResponse.json({
+          success: true,
+          data: doctors,
+        });
       }
 
-      // ===== 2. KIỂM TRA LỊCH TRỐNG CỦA BÁC SĨ =====
+      // ===== 2. KIỂM TRA LỊCH TRỐNG =====
       case "getAvailableSlots": {
-        const { doctorId, date } = params || {};
-        if (!doctorId || !date) {
-          return NextResponse.json({ success: false, error: "Thiếu thông tin bác sĩ hoặc ngày" });
+        const { doctorId, doctorName, date } = params || {};
+
+        if ((!doctorId && !doctorName) || !date) {
+          return NextResponse.json({
+            success: false,
+            error: "Thiếu thông tin bác sĩ hoặc ngày",
+          });
         }
 
-        // Lấy các khung giờ đã được đặt
+        // Tìm bác sĩ - thử nhiều chiến lược
+        let resolvedDoctorId = doctorId;
+
+        if (!resolvedDoctorId && doctorName) {
+          // Làm sạch tên: bỏ prefix "Bác sĩ", "bs", "dr" ...
+          const cleanName = doctorName
+            .replace(/^(bác sĩ|bacsi|bs\.?|dr\.?)\s*/i, "")
+            .trim();
+
+          // Thử tìm theo tên đầy đủ trước
+          let doctorByName = await prisma.doctor.findFirst({
+            where: { name: { contains: cleanName, mode: "insensitive" }, isActive: true },
+            select: { id: true },
+          });
+
+          // Nếu không tìm được → thử từng từ trong tên
+          if (!doctorByName) {
+            const nameParts = cleanName.split(/\s+/).filter(Boolean);
+            for (const part of nameParts.reverse()) {
+              if (part.length < 2) continue;
+              doctorByName = await prisma.doctor.findFirst({
+                where: { name: { contains: part, mode: "insensitive" }, isActive: true },
+                select: { id: true },
+              });
+              if (doctorByName) break;
+            }
+          }
+
+          if (doctorByName) {
+            resolvedDoctorId = doctorByName.id;
+          }
+        }
+
+        if (!resolvedDoctorId) {
+          return NextResponse.json({
+            success: false,
+            error: "Không tìm thấy bác sĩ này trong hệ thống.",
+          });
+        }
+
+        // Validate date format (phải là YYYY-MM-DD)
+        const parsedDate = new Date(date);
+        if (isNaN(parsedDate.getTime())) {
+          return NextResponse.json({
+            success: false,
+            error: `Định dạng ngày không hợp lệ: "${date}". Vui lòng dùng định dạng YYYY-MM-DD (ví dụ: 2026-06-15)`,
+          });
+        }
+
         const bookedAppointments = await prisma.appointment.findMany({
           where: {
-            doctorId,
-            date: new Date(date),
-            status: { in: ["CONFIRMED", "COMPLETED"] },
+            doctorId: resolvedDoctorId,
+            date: parsedDate,
+            status: {
+              in: ["CONFIRMED", "COMPLETED"],
+            },
           },
-          select: { time: true },
+          select: {
+            time: true,
+          },
         });
 
         const bookedTimes = bookedAppointments.map((a) => a.time);
 
-        // Tất cả các khung giờ có thể đặt
         const allSlots = [
-          "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-          "14:00", "14:30", "15:00", "15:30", "16:00", "16:30",
+          "09:00",
+          "09:30",
+          "10:00",
+          "10:30",
+          "11:00",
+          "11:30",
+          "14:00",
+          "14:30",
+          "15:00",
+          "15:30",
+          "16:00",
+          "16:30",
         ];
 
-        // Lọc ra các khung giờ còn trống
-        const availableSlots = allSlots.filter((s) => !bookedTimes.includes(s));
+        const availableSlots = allSlots.filter(
+          (s) => !bookedTimes.includes(s)
+        );
 
-        return NextResponse.json({ success: true, data: { availableSlots, bookedTimes } });
+        return NextResponse.json({
+          success: true,
+          data: {
+            availableSlots,
+            bookedTimes,
+          },
+        });
       }
 
-      // ===== 3. XEM LỊCH HẸN CỦA NGƯỜI DÙNG HIỆN TẠI =====
+      // ===== 3. XEM LỊCH HẸN =====
+
       case "getMyAppointments": {
         const { userId } = await auth();
+
         if (!userId) {
-          return NextResponse.json({ success: false, error: "Anh/Chị cần đăng nhập để xem lịch hẹn ạ." });
+          return NextResponse.json({
+            success: false,
+            error: "Anh/Chị cần đăng nhập để xem lịch hẹn ạ.",
+          });
         }
 
-        const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+        const user = await prisma.user.findUnique({
+          where: {
+            clerkId: userId,
+          },
+        });
+
         if (!user) {
-          return NextResponse.json({ success: false, error: "Không tìm thấy thông tin người dùng." });
+          return NextResponse.json({
+            success: false,
+            error: "Không tìm thấy thông tin người dùng.",
+          });
         }
 
         const appointments = await prisma.appointment.findMany({
-          where: { userId: user.id },
-          include: {
-            doctor: { select: { name: true, speciality: true } },
+          where: {
+            userId: user.id,
           },
-          orderBy: [{ date: "asc" }, { time: "asc" }],
+
+          include: {
+            doctor: {
+              select: {
+                name: true,
+                speciality: true,
+              },
+            },
+          },
+
+          orderBy: [
+            {
+              date: "asc",
+            },
+            {
+              time: "asc",
+            },
+          ],
         });
 
         const formattedAppointments = appointments.map((a) => ({
@@ -83,114 +188,206 @@ export async function POST(req: NextRequest) {
           time: a.time,
           reason: a.reason || "Khám tổng quát",
           status: a.status,
+          phoneNumber: a.phoneNumber,
+          symptom: a.symptom,
         }));
-
-        return NextResponse.json({ success: true, data: formattedAppointments });
-      }
-
-      // ===== 4. ĐẶT LỊCH KHÁM MỚI =====
-      case "bookAppointment": {
-        const { userId: clerkUserId } = await auth();
-        if (!clerkUserId) {
-          return NextResponse.json({ success: false, error: "Anh/Chị cần đăng nhập để đặt lịch ạ." });
-        }
-
-        const currentUser = await prisma.user.findUnique({ where: { clerkId: clerkUserId } });
-        if (!currentUser) {
-          return NextResponse.json({ success: false, error: "Không tìm thấy thông tin người dùng." });
-        }
-
-        const { doctorId: bookDoctorId, doctorName: bookDoctorName, date: bookDate, time: bookTime, reason: bookReason } = params || {};
-
-        if (!bookDate || !bookTime) {
-          return NextResponse.json({ success: false, error: "Thiếu thông tin (ngày, giờ) để đặt lịch." });
-        }
-
-        // Tìm bác sĩ bằng ID hoặc tên (AI có thể dùng tên thay vì ID)
-        let resolvedDoctorId = bookDoctorId;
-        if (!resolvedDoctorId && bookDoctorName) {
-          const doctorByName = await prisma.doctor.findFirst({
-            where: {
-              name: { contains: bookDoctorName, mode: "insensitive" },
-              isActive: true,
-            },
-            select: { id: true },
-          });
-          if (doctorByName) resolvedDoctorId = doctorByName.id;
-        }
-
-        if (!resolvedDoctorId) {
-          return NextResponse.json({ success: false, error: "Không tìm thấy bác sĩ. Anh/Chị vui lòng chọn lại bác sĩ ạ." });
-        }
-
-        // Kiểm tra bác sĩ có tồn tại trong hệ thống không
-        const doctor = await prisma.doctor.findUnique({
-          where: { id: resolvedDoctorId },
-          select: { id: true, name: true, isActive: true },
-        });
-
-        if (!doctor || !doctor.isActive) {
-          // Thử tìm bằng tên nếu ID không hợp lệ
-          const doctorByName = await prisma.doctor.findFirst({
-            where: { isActive: true },
-            select: { id: true, name: true },
-            orderBy: { name: "asc" },
-          });
-          if (doctorByName) {
-            return NextResponse.json({
-              success: false,
-              error: `Không tìm thấy bác sĩ với ID "${resolvedDoctorId}". Anh/Chị hãy hỏi em danh sách bác sĩ để chọn lại nhé!`,
-            });
-          }
-          return NextResponse.json({ success: false, error: "Không tìm thấy bác sĩ trong hệ thống." });
-        }
-
-        // Kiểm tra xem khung giờ đó đã bị đặt chưa
-        const existingAppointment = await prisma.appointment.findFirst({
-          where: {
-            doctorId: doctor.id,
-            date: new Date(bookDate),
-            time: bookTime,
-            status: { in: ["CONFIRMED", "COMPLETED"] },
-          },
-        });
-
-        if (existingAppointment) {
-          return NextResponse.json({ success: false, error: "Khung giờ này đã có người đặt rồi ạ. Anh/Chị chọn giờ khác nhé!" });
-        }
-
-        // Tạo lịch hẹn mới
-        const newAppointment = await prisma.appointment.create({
-          data: {
-            userId: currentUser.id,
-            doctorId: doctor.id,
-            date: new Date(bookDate),
-            time: bookTime,
-            reason: bookReason || "Khám tổng quát",
-            status: "CONFIRMED",
-          },
-          include: {
-            doctor: { select: { name: true } },
-          },
-        });
 
         return NextResponse.json({
           success: true,
+          data: formattedAppointments,
+        });
+      }
+
+      // ===== 4. ĐẶT LỊCH KHÁM =====
+      case "bookAppointment": {
+        const { userId: clerkUserId } = await auth();
+
+        if (!clerkUserId) {
+          return NextResponse.json({
+            success: false,
+            error: "Anh/Chị cần đăng nhập để đặt lịch ạ.",
+          });
+        }
+
+        const currentUser = await prisma.user.findUnique({
+          where: {
+            clerkId: clerkUserId,
+          },
+        });
+
+        if (!currentUser) {
+          return NextResponse.json({
+            success: false,
+            error: "Không tìm thấy thông tin người dùng.",
+          });
+        }
+
+        const {
+          doctorId: bookDoctorId,
+          doctorName: bookDoctorName,
+          date: bookDate,
+          time: bookTime,
+          reason: bookReason,
+
+          // NEW
+          phoneNumber,
+          symptom,
+        } = params || {};
+
+        if (
+          !bookDate ||
+          !bookTime ||
+          !phoneNumber ||
+          !symptom
+        ) {
+          return NextResponse.json({
+            success: false,
+            error: "Vui lòng nhập đầy đủ thông tin đặt lịch.",
+          });
+        }
+
+        // Tìm bác sĩ - thử nhiều chiến lược
+        let resolvedDoctorId = bookDoctorId;
+
+        if (!resolvedDoctorId && bookDoctorName) {
+          // Làm sạch tên: bỏ prefix "Bác sĩ", "bs", "dr" ...
+          const cleanName = bookDoctorName
+            .replace(/^(bác sĩ|bacsi|bs\.?|dr\.?)\s*/i, "")
+            .trim();
+
+          // Thử tìm theo tên đầy đủ trước
+          let doctorByName = await prisma.doctor.findFirst({
+            where: { name: { contains: cleanName, mode: "insensitive" }, isActive: true },
+            select: { id: true },
+          });
+
+          // Nếu không tìm được → thử từng từ trong tên (họ, tên đệm, tên)
+          if (!doctorByName) {
+            const nameParts = cleanName.split(/\s+/).filter(Boolean);
+            for (const part of nameParts.reverse()) { // ưu tiên tên (phần cuối)
+              if (part.length < 2) continue;
+              doctorByName = await prisma.doctor.findFirst({
+                where: { name: { contains: part, mode: "insensitive" }, isActive: true },
+                select: { id: true },
+              });
+              if (doctorByName) break;
+            }
+          }
+
+          if (doctorByName) {
+            resolvedDoctorId = doctorByName.id;
+          }
+        }
+
+        if (!resolvedDoctorId) {
+          return NextResponse.json({
+            success: false,
+            error:
+              "Không tìm thấy bác sĩ. Anh/Chị vui lòng chọn lại bác sĩ ạ.",
+          });
+        }
+
+        // Kiểm tra bác sĩ
+        const doctor = await prisma.doctor.findUnique({
+          where: {
+            id: resolvedDoctorId,
+          },
+
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+          },
+        });
+
+        if (!doctor || !doctor.isActive) {
+          return NextResponse.json({
+            success: false,
+            error: "Không tìm thấy bác sĩ trong hệ thống.",
+          });
+        }
+
+        // Kiểm tra trùng lịch
+        const existingAppointment =
+          await prisma.appointment.findFirst({
+            where: {
+              doctorId: doctor.id,
+              date: new Date(bookDate),
+              time: bookTime,
+
+              status: {
+                in: ["CONFIRMED", "COMPLETED"],
+              },
+            },
+          });
+
+        if (existingAppointment) {
+          return NextResponse.json({
+            success: false,
+            error:
+              "Khung giờ này đã có người đặt rồi ạ. Anh/Chị chọn giờ khác nhé!",
+          });
+        }
+
+        // ===== TẠO LỊCH HẸN =====
+        const newAppointment =
+          await prisma.appointment.create({
+            data: {
+              userId: currentUser.id,
+              doctorId: doctor.id,
+
+              date: new Date(bookDate),
+              time: bookTime,
+
+              reason: bookReason || "Khám tổng quát",
+
+              // NEW
+              phoneNumber,
+              symptom,
+
+              status: "CONFIRMED",
+            },
+
+            include: {
+              doctor: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          });
+
+        return NextResponse.json({
+          success: true,
+
           data: {
             id: newAppointment.id,
             doctorName: newAppointment.doctor.name,
-            date: newAppointment.date.toISOString().split("T")[0],
+            date: newAppointment.date
+              .toISOString()
+              .split("T")[0],
+
             time: newAppointment.time,
             reason: newAppointment.reason,
+
+            phoneNumber: newAppointment.phoneNumber,
+            symptom: newAppointment.symptom,
           },
         });
       }
 
       default:
-        return NextResponse.json({ success: false, error: "Hành động không hợp lệ" });
+        return NextResponse.json({
+          success: false,
+          error: "Hành động không hợp lệ",
+        });
     }
   } catch (error) {
     console.error("Chat Actions Error:", error);
-    return NextResponse.json({ success: false, error: "Đã xảy ra lỗi hệ thống" });
+
+    return NextResponse.json({
+      success: false,
+      error: "Đã xảy ra lỗi hệ thống",
+    });
   }
 }

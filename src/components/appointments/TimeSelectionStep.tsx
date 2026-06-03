@@ -1,7 +1,24 @@
 import { useBookedTimeSlots } from "@/hooks/use-appointment";
-import { APPOINTMENT_TYPES, getAvailableTimeSlots, getNext5Days } from "@/lib/utils";
+import {
+  APPOINTMENT_TYPES,
+  getAvailableTimeSlots,
+  getNext5Days,
+} from "@/lib/utils";
+
 import { Button } from "../ui/button";
-import { ChevronLeftIcon, ClockIcon, CalendarDaysIcon, SparklesIcon, ArrowRightIcon } from "lucide-react";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+
+import {
+  ChevronLeftIcon,
+  ClockIcon,
+  CalendarDaysIcon,
+  SparklesIcon,
+  ArrowRightIcon,
+  PhoneIcon,
+  FileTextIcon,
+} from "lucide-react";
+
 import { Card, CardContent } from "../ui/card";
 
 interface TimeSelectionStepProps {
@@ -9,9 +26,18 @@ interface TimeSelectionStepProps {
   selectedDate: string;
   selectedTime: string;
   selectedType: string;
+
+  // NEW
+  phoneNumber: string;
+  symptom: string;
+
+  onPhoneNumberChange: (value: string) => void;
+  onSymptomChange: (value: string) => void;
+
   onDateChange: (date: string) => void;
   onTimeChange: (time: string) => void;
   onTypeChange: (type: string) => void;
+
   onBack: () => void;
   onContinue: () => void;
 }
@@ -22,12 +48,24 @@ function TimeSelectionStep({
   onDateChange,
   onTimeChange,
   onTypeChange,
+
+  // NEW
+  onPhoneNumberChange,
+  onSymptomChange,
+
   selectedDate,
   selectedDentistId,
   selectedTime,
   selectedType,
+
+  // NEW
+  phoneNumber,
+  symptom,
 }: TimeSelectionStepProps) {
-  const { data: bookedTimeSlots = [] } = useBookedTimeSlots(selectedDentistId, selectedDate);
+  const { data: bookedTimeSlots = [] } = useBookedTimeSlots(
+    selectedDentistId,
+    selectedDate
+  );
 
   const availableDates = getNext5Days();
   const availableTimeSlots = getAvailableTimeSlots();
@@ -39,77 +77,165 @@ function TimeSelectionStep({
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Header with back button */}
+      {/* Header */}
       <div className="flex items-center gap-4">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={onBack}
           className="size-10 rounded-xl p-0 hover:bg-slate-100 transition-colors"
         >
           <ChevronLeftIcon className="size-5 text-slate-600" />
         </Button>
+
         <div className="flex items-center gap-3">
           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Chọn Dịch vụ & Thời gian</h2>
+
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+            Chọn Dịch vụ & Thời gian
+          </h2>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-12">
-        {/* Service selection */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-2 text-slate-400 mb-2">
-            <SparklesIcon className="size-4 text-blue-500" />
-            <h3 className="text-sm font-black uppercase tracking-widest">Loại dịch vụ</h3>
-          </div>
-          <div className="space-y-4">
-            {APPOINTMENT_TYPES.map((type) => {
-              const isSelected = selectedType === type.id;
-              return (
-                <div
-                  key={type.id}
-                  onClick={() => onTypeChange(type.id)}
-                  className={`group relative cursor-pointer rounded-2xl transition-all duration-300 ${
-                    isSelected ? "scale-[1.02]" : "hover:scale-[1.01]"
-                  }`}
-                >
-                  <Card className={`overflow-hidden border-slate-100 transition-all ${
-                    isSelected ? "bg-blue-600 text-white border-blue-600 shadow-xl shadow-blue-200" : "bg-white hover:bg-slate-50"
-                  }`}>
-                    <CardContent className="p-5">
-                      <div className="flex justify-between items-center">
-                        <div className="space-y-1">
-                          <h4 className={`font-black text-base ${isSelected ? "text-white" : "text-slate-900"}`}>{type.name}</h4>
-                          <div className="flex items-center gap-2">
-                            <ClockIcon className={`size-3 ${isSelected ? "text-blue-100" : "text-slate-400"}`} />
-                            <p className={`text-xs font-medium ${isSelected ? "text-blue-100" : "text-slate-500"}`}>{type.duration}</p>
+        {/* LEFT */}
+        <div className="space-y-8">
+          {/* SERVICE */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 text-slate-400 mb-2">
+              <SparklesIcon className="size-4 text-blue-500" />
+
+              <h3 className="text-sm font-black uppercase tracking-widest">
+                Loại dịch vụ
+              </h3>
+            </div>
+
+            <div className="space-y-4">
+              {APPOINTMENT_TYPES.map((type) => {
+                const isSelected = selectedType === type.id;
+
+                return (
+                  <div
+                    key={type.id}
+                    onClick={() => onTypeChange(type.id)}
+                    className={`group relative cursor-pointer rounded-2xl transition-all duration-300 ${
+                      isSelected
+                        ? "scale-[1.02]"
+                        : "hover:scale-[1.01]"
+                    }`}
+                  >
+                    <Card
+                      className={`overflow-hidden border-slate-100 transition-all ${
+                        isSelected
+                          ? "bg-blue-600 text-white border-blue-600 shadow-xl shadow-blue-200"
+                          : "bg-white hover:bg-slate-50"
+                      }`}
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex justify-between items-center">
+                          <div className="space-y-1">
+                            <h4
+                              className={`font-black text-base ${
+                                isSelected
+                                  ? "text-white"
+                                  : "text-slate-900"
+                              }`}
+                            >
+                              {type.name}
+                            </h4>
+
+                            <div className="flex items-center gap-2">
+                              <ClockIcon
+                                className={`size-3 ${
+                                  isSelected
+                                    ? "text-blue-100"
+                                    : "text-slate-400"
+                                }`}
+                              />
+
+                              <p
+                                className={`text-xs font-medium ${
+                                  isSelected
+                                    ? "text-blue-100"
+                                    : "text-slate-500"
+                                }`}
+                              >
+                                {type.duration}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div
+                            className={`px-4 py-2 rounded-xl text-sm font-black ${
+                              isSelected
+                                ? "bg-white/20 text-white"
+                                : "bg-blue-50 text-blue-600"
+                            }`}
+                          >
+                            {type.price}
                           </div>
                         </div>
-                        <div className={`px-4 py-2 rounded-xl text-sm font-black ${
-                          isSelected ? "bg-white/20 text-white" : "bg-blue-50 text-blue-600"
-                        }`}>
-                          {type.price}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              );
-            })}
+                      </CardContent>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* PHONE */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <PhoneIcon className="size-4 text-blue-500" />
+
+              <h3 className="text-sm font-black uppercase tracking-widest text-slate-500">
+                Số điện thoại
+              </h3>
+            </div>
+
+            <Input
+              value={phoneNumber}
+              onChange={(e) => onPhoneNumberChange(e.target.value)}
+              placeholder="Nhập số điện thoại của bạn"
+              className="h-12 rounded-2xl border-slate-200 focus-visible:ring-blue-500"
+            />
+          </div>
+
+          {/* SYMPTOM */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <FileTextIcon className="size-4 text-blue-500" />
+
+              <h3 className="text-sm font-black uppercase tracking-widest text-slate-500">
+                Triệu chứng đau răng
+              </h3>
+            </div>
+
+            <Textarea
+              value={symptom}
+              onChange={(e) => onSymptomChange(e.target.value)}
+              placeholder="Ví dụ: đau nhức răng, ê buốt, chảy máu chân răng..."
+              className="min-h-[120px] rounded-2xl border-slate-200 focus-visible:ring-blue-500 resize-none"
+            />
           </div>
         </div>
 
-        {/* Date & time selection */}
+        {/* RIGHT */}
         <div className="space-y-8">
-          {/* Date selection */}
+          {/* DATE */}
           <div className="space-y-6">
             <div className="flex items-center gap-2 text-slate-400 mb-2">
               <CalendarDaysIcon className="size-4 text-blue-500" />
-              <h3 className="text-sm font-black uppercase tracking-widest">Chọn Ngày khám</h3>
+
+              <h3 className="text-sm font-black uppercase tracking-widest">
+                Chọn Ngày khám
+              </h3>
             </div>
+
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {availableDates.map((date) => {
                 const isSelected = selectedDate === date;
                 const dateObj = new Date(date);
+
                 return (
                   <button
                     key={date}
@@ -120,13 +246,35 @@ function TimeSelectionStep({
                         : "bg-white border-slate-100 hover:border-blue-200"
                     }`}
                   >
-                    <span className={`text-[10px] font-black uppercase tracking-widest mb-1 ${isSelected ? "text-blue-600" : "text-slate-400"}`}>
-                      {dateObj.toLocaleDateString("vi-VN", { weekday: "short" })}
+                    <span
+                      className={`text-[10px] font-black uppercase tracking-widest mb-1 ${
+                        isSelected
+                          ? "text-blue-600"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      {dateObj.toLocaleDateString("vi-VN", {
+                        weekday: "short",
+                      })}
                     </span>
-                    <span className={`text-lg font-black ${isSelected ? "text-blue-700" : "text-slate-900"}`}>
+
+                    <span
+                      className={`text-lg font-black ${
+                        isSelected
+                          ? "text-blue-700"
+                          : "text-slate-900"
+                      }`}
+                    >
                       {dateObj.getDate()}
                     </span>
-                    <span className={`text-[10px] font-bold ${isSelected ? "text-blue-400" : "text-slate-400"}`}>
+
+                    <span
+                      className={`text-[10px] font-bold ${
+                        isSelected
+                          ? "text-blue-400"
+                          : "text-slate-400"
+                      }`}
+                    >
                       Tháng {dateObj.getMonth() + 1}
                     </span>
                   </button>
@@ -135,22 +283,29 @@ function TimeSelectionStep({
             </div>
           </div>
 
-          {/* Time selection */}
+          {/* TIME */}
           {selectedDate && (
             <div className="space-y-6 animate-in fade-in duration-500">
               <div className="flex items-center gap-2 text-slate-400 mb-2">
                 <ClockIcon className="size-4 text-blue-500" />
-                <h3 className="text-sm font-black uppercase tracking-widest">Giờ trống</h3>
+
+                <h3 className="text-sm font-black uppercase tracking-widest">
+                  Giờ trống
+                </h3>
               </div>
+
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
                 {availableTimeSlots.map((time) => {
                   const isBooked = bookedTimeSlots.includes(time);
                   const isSelected = selectedTime === time;
+
                   return (
                     <button
                       key={time}
                       disabled={isBooked}
-                      onClick={() => !isBooked && onTimeChange(time)}
+                      onClick={() =>
+                        !isBooked && onTimeChange(time)
+                      }
                       className={`flex items-center justify-center h-11 rounded-xl text-xs font-black transition-all ${
                         isSelected
                           ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
@@ -164,26 +319,34 @@ function TimeSelectionStep({
                   );
                 })}
               </div>
+
               {bookedTimeSlots.length > 5 && (
-                <p className="text-[10px] text-slate-400 italic">* Lưu ý: Nhiều khung giờ đã có người đặt trước</p>
+                <p className="text-[10px] text-slate-400 italic">
+                  * Lưu ý: Nhiều khung giờ đã có người đặt trước
+                </p>
               )}
             </div>
           )}
         </div>
       </div>
 
-      {/* Continue button */}
-      {selectedType && selectedDate && selectedTime && (
-        <div className="flex justify-end pt-4">
-          <Button 
-            onClick={onContinue}
-            className="h-14 px-10 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-base shadow-xl shadow-blue-200 transition-all hover:-translate-y-1 group"
-          >
-            Xem lại Lịch đặt
-            <ArrowRightIcon className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </div>
-      )}
+      {/* BUTTON */}
+      {selectedType &&
+        selectedDate &&
+        selectedTime &&
+        phoneNumber &&
+        symptom && (
+          <div className="flex justify-end pt-4">
+            <Button
+              onClick={onContinue}
+              className="h-14 px-10 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-base shadow-xl shadow-blue-200 transition-all hover:-translate-y-1 group"
+            >
+              Xem lại Lịch đặt
+
+              <ArrowRightIcon className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+        )}
     </div>
   );
 }
