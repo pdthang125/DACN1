@@ -39,6 +39,7 @@ function CustomersManagementPage() {
           name: appointment.patientName,
           email: appointment.patientEmail,
           phone: appointment.phoneNumber,
+          symptom: appointment.symptom, // thêm dòng này
           appointmentsCount:
             appointments.filter(
               (a) =>
@@ -206,7 +207,8 @@ function CustomersManagementPage() {
                   </TableHead>
 
                   <TableHead className="text-sm font-bold uppercase tracking-wide text-slate-500">
-                    Trạng thái
+                    Loại dịch vụ
+
                   </TableHead>
 
                 </TableRow>
@@ -269,17 +271,8 @@ function CustomersManagementPage() {
 
                       <TableCell>
 
-                        <div
-                          className={`inline-flex rounded-xl px-3 py-1 text-sm font-semibold ${customer.appointmentsCount > 1
-                              ? "bg-blue-100 text-blue-700"
-                              : "bg-orange-100 text-orange-700"
-                            }`}
-                        >
-
-                          {customer.appointmentsCount > 1
-                            ? "Bệnh nhân cũ"
-                            : "Bệnh nhân mới"}
-
+                        <div className="inline-flex rounded-xl bg-red-100 px-3 py-1 text-sm font-semibold text-red-700">
+                          {customer.symptom || "Chưa cập nhật"}
                         </div>
 
                       </TableCell>

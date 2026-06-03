@@ -67,6 +67,7 @@ function AiMonitorPage() {
 
   const hourlyData =
     Object.entries(hourMap)
+
       .map(
         ([time, count]) => ({
           time,
@@ -204,21 +205,30 @@ function AiMonitorPage() {
     );
 
 
-  
 
- const busiestHours =
-  Object.entries(hourMap)
-    .map(
-      ([hour, total]) => ({
-        hour,
-        total,
-      })
-    )
-    .sort((a, b) =>
-      a.hour.localeCompare(
-        b.hour
+
+  const busiestHours =
+    Object.entries(hourMap)
+      .map(
+        ([hour, total]) => ({
+          hour,
+          total,
+        })
       )
-    );
+      .sort((a, b) =>
+        a.hour.localeCompare(
+          b.hour
+        )
+      );
+  const peakHour =
+    busiestHours.length > 0
+      ? busiestHours.reduce(
+        (max, current) =>
+          current.total > max.total
+            ? current
+            : max
+      )
+      : null;
 
   const statusData = [
     {
@@ -341,9 +351,10 @@ function AiMonitorPage() {
                 </p>
 
                 <h3 className="mt-3 text-3xl font-black text-violet-700">
-                  09h - 11h
+                  {peakHour
+                    ? `${peakHour.hour}`
+                    : "Chưa có dữ liệu"}
                 </h3>
-
               </div>
 
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white">

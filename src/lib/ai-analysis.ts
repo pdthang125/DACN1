@@ -32,46 +32,29 @@ export function generateAiInsights(
   const cancelRate =
     totalAppointments > 0
       ? (
-          cancelledAppointments /
-          totalAppointments
-        ) * 100
+        cancelledAppointments /
+        totalAppointments
+      ) * 100
       : 0;
 
   // MORNING APPOINTMENTS
 
-  const morningAppointments =
-    appointments.filter(
-      (appointment) => {
+  const hourMap: Record<string, number> = {};
 
-        const hour =
-          parseInt(
-            appointment.time.split(":")[0]
-          );
+  appointments.forEach((appointment) => {
+    if (appointment.time) {
+      hourMap[appointment.time] =
+        (hourMap[appointment.time] || 0) + 1;
+    }
+  });
 
-        return hour >= 8 && hour <= 11;
+  const peakHour = Object.entries(hourMap)
+    .sort((a, b) => b[1] - a[1])[0];
 
-      }
-    ).length;
-
-  // AI RULES
-
-  if (cancelRate > 20) {
-
+  if (peakHour) {
     insights.push(
-      "Tỷ lệ hủy lịch đang cao, nên xác nhận lịch trước với bệnh nhân."
+      `Khung giờ đông nhất hiện tại là ${peakHour[0]} với ${peakHour[1]} lịch hẹn.`
     );
-
-  }
-
-  if (
-    morningAppointments >
-    totalAppointments * 0.5
-  ) {
-
-    insights.push(
-      "Buổi sáng đang quá tải lịch hẹn, nên tăng bác sĩ trực."
-    );
-
   }
 
   if (

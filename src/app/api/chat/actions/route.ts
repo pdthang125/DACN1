@@ -30,19 +30,68 @@ export async function POST(req: NextRequest) {
 
       // ===== 2. KIỂM TRA LỊCH TRỐNG =====
       case "getAvailableSlots": {
-        const { doctorId, date } = params || {};
+        const { doctorId, doctorName, date } = params || {};
 
-        if (!doctorId || !date) {
+        if ((!doctorId && !doctorName) || !date) {
           return NextResponse.json({
             success: false,
             error: "Thiếu thông tin bác sĩ hoặc ngày",
           });
         }
 
+        // Tìm bác sĩ - thử nhiều chiến lược
+        let resolvedDoctorId = doctorId;
+
+        if (!resolvedDoctorId && doctorName) {
+          // Làm sạch tên: bỏ prefix "Bác sĩ", "bs", "dr" ...
+          const cleanName = doctorName
+            .replace(/^(bác sĩ|bacsi|bs\.?|dr\.?)\s*/i, "")
+            .trim();
+
+          // Thử tìm theo tên đầy đủ trước
+          let doctorByName = await prisma.doctor.findFirst({
+            where: { name: { contains: cleanName, mode: "insensitive" }, isActive: true },
+            select: { id: true },
+          });
+
+          // Nếu không tìm được → thử từng từ trong tên
+          if (!doctorByName) {
+            const nameParts = cleanName.split(/\s+/).filter(Boolean);
+            for (const part of nameParts.reverse()) {
+              if (part.length < 2) continue;
+              doctorByName = await prisma.doctor.findFirst({
+                where: { name: { contains: part, mode: "insensitive" }, isActive: true },
+                select: { id: true },
+              });
+              if (doctorByName) break;
+            }
+          }
+
+          if (doctorByName) {
+            resolvedDoctorId = doctorByName.id;
+          }
+        }
+
+        if (!resolvedDoctorId) {
+          return NextResponse.json({
+            success: false,
+            error: "Không tìm thấy bác sĩ này trong hệ thống.",
+          });
+        }
+
+        // Validate date format (phải là YYYY-MM-DD)
+        const parsedDate = new Date(date);
+        if (isNaN(parsedDate.getTime())) {
+          return NextResponse.json({
+            success: false,
+            error: `Định dạng ngày không hợp lệ: "${date}". Vui lòng dùng định dạng YYYY-MM-DD (ví dụ: 2026-06-15)`,
+          });
+        }
+
         const bookedAppointments = await prisma.appointment.findMany({
           where: {
-            doctorId,
-            date: new Date(date),
+            doctorId: resolvedDoctorId,
+            date: parsedDate,
             status: {
               in: ["CONFIRMED", "COMPLETED"],
             },
@@ -83,6 +132,10 @@ export async function POST(req: NextRequest) {
       }
 
       // ===== 3. XEM LỊCH HẸN =====
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3bbeabb844bc8744db0f73a965b56053cac83934
       case "getMyAppointments": {
         const { userId } = await auth();
 
@@ -196,6 +249,7 @@ export async function POST(req: NextRequest) {
           });
         }
 
+<<<<<<< HEAD
         // Tìm bác sĩ
         let resolvedDoctorId = bookDoctorId;
 
@@ -214,6 +268,36 @@ export async function POST(req: NextRequest) {
             },
           });
 
+=======
+        // Tìm bác sĩ - thử nhiều chiến lược
+        let resolvedDoctorId = bookDoctorId;
+
+        if (!resolvedDoctorId && bookDoctorName) {
+          // Làm sạch tên: bỏ prefix "Bác sĩ", "bs", "dr" ...
+          const cleanName = bookDoctorName
+            .replace(/^(bác sĩ|bacsi|bs\.?|dr\.?)\s*/i, "")
+            .trim();
+
+          // Thử tìm theo tên đầy đủ trước
+          let doctorByName = await prisma.doctor.findFirst({
+            where: { name: { contains: cleanName, mode: "insensitive" }, isActive: true },
+            select: { id: true },
+          });
+
+          // Nếu không tìm được → thử từng từ trong tên (họ, tên đệm, tên)
+          if (!doctorByName) {
+            const nameParts = cleanName.split(/\s+/).filter(Boolean);
+            for (const part of nameParts.reverse()) { // ưu tiên tên (phần cuối)
+              if (part.length < 2) continue;
+              doctorByName = await prisma.doctor.findFirst({
+                where: { name: { contains: part, mode: "insensitive" }, isActive: true },
+                select: { id: true },
+              });
+              if (doctorByName) break;
+            }
+          }
+
+>>>>>>> 3bbeabb844bc8744db0f73a965b56053cac83934
           if (doctorByName) {
             resolvedDoctorId = doctorByName.id;
           }
