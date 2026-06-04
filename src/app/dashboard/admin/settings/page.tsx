@@ -284,75 +284,75 @@ export default function SettingsPage() {
 
           <div className="space-y-5">
 
-  <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
 
-    <div className="h-3 w-3 rounded-full bg-green-500"></div>
+              <div className="h-3 w-3 rounded-full bg-green-500"></div>
 
-    <span className="font-bold text-green-600">
-      Đang hoạt động
-    </span>
+              <span className="font-bold text-green-600">
+                Đang hoạt động
+              </span>
 
-  </div>
+            </div>
 
-  <div className="rounded-xl border p-4">
+            <div className="rounded-xl border p-4">
 
-    <p className="font-bold">
-      ✓ AI phân tích lịch hẹn
-    </p>
+              <p className="font-bold">
+                ✓ AI phân tích lịch hẹn
+              </p>
 
-    <p className="text-sm text-slate-500">
-      Phân tích dữ liệu lịch khám của bệnh nhân
-    </p>
+              <p className="text-sm text-slate-500">
+                Phân tích dữ liệu lịch khám của bệnh nhân
+              </p>
 
-  </div>
+            </div>
 
-  <div className="rounded-xl border p-4">
+            <div className="rounded-xl border p-4">
 
-    <p className="font-bold">
-      ✓ Dự đoán giờ cao điểm
-    </p>
+              <p className="font-bold">
+                ✓ Dự đoán giờ cao điểm
+              </p>
 
-    <p className="text-sm text-slate-500">
-      Xác định các khung giờ có lượng đặt lịch cao
-    </p>
+              <p className="text-sm text-slate-500">
+                Xác định các khung giờ có lượng đặt lịch cao
+              </p>
 
-  </div>
+            </div>
 
-  <div className="rounded-xl border p-4">
+            <div className="rounded-xl border p-4">
 
-    <p className="font-bold">
-      ✓ Cảnh báo quá tải lịch khám
-    </p>
+              <p className="font-bold">
+                ✓ Cảnh báo quá tải lịch khám
+              </p>
 
-    <p className="text-sm text-slate-500">
-      Hỗ trợ quản lý lịch hẹn hiệu quả hơn
-    </p>
+              <p className="text-sm text-slate-500">
+                Hỗ trợ quản lý lịch hẹn hiệu quả hơn
+              </p>
 
-  </div>
+            </div>
 
-  <div className="rounded-xl bg-slate-50 p-4">
+            <div className="rounded-xl bg-slate-50 p-4">
 
-    <p>
-      <strong>Mô hình:</strong>
-      {" "}
-      Rule-Based Analytics
-    </p>
+              <p>
+                <strong>Mô hình:</strong>
+                {" "}
+                Rule-Based Analytics
+              </p>
 
-    <p>
-      <strong>Dữ liệu:</strong>
-      {" "}
-      Lịch hẹn nha khoa
-    </p>
+              <p>
+                <strong>Dữ liệu:</strong>
+                {" "}
+                Lịch hẹn nha khoa
+              </p>
 
-    <p>
-      <strong>Phiên bản:</strong>
-      {" "}
-      AI Monitor v1.0
-    </p>
+              <p>
+                <strong>Phiên bản:</strong>
+                {" "}
+                AI Monitor v1.0
+              </p>
 
-  </div>
+            </div>
 
-</div>
+          </div>
 
         </CardContent>
 
@@ -376,7 +376,9 @@ export default function SettingsPage() {
 
           <div className="flex items-center gap-4">
 
-            <UserButton />
+            <div suppressHydrationWarning>
+              <UserButton />
+            </div>
 
             <div>
 

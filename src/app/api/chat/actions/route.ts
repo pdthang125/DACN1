@@ -132,10 +132,6 @@ export async function POST(req: NextRequest) {
       }
 
       // ===== 3. XEM LỊCH HẸN =====
-<<<<<<< HEAD
-=======
-
->>>>>>> 3bbeabb844bc8744db0f73a965b56053cac83934
       case "getMyAppointments": {
         const { userId } = await auth();
 
@@ -249,26 +245,6 @@ export async function POST(req: NextRequest) {
           });
         }
 
-<<<<<<< HEAD
-        // Tìm bác sĩ
-        let resolvedDoctorId = bookDoctorId;
-
-        if (!resolvedDoctorId && bookDoctorName) {
-          const doctorByName = await prisma.doctor.findFirst({
-            where: {
-              name: {
-                contains: bookDoctorName,
-                mode: "insensitive",
-              },
-              isActive: true,
-            },
-
-            select: {
-              id: true,
-            },
-          });
-
-=======
         // Tìm bác sĩ - thử nhiều chiến lược
         let resolvedDoctorId = bookDoctorId;
 
@@ -297,7 +273,6 @@ export async function POST(req: NextRequest) {
             }
           }
 
->>>>>>> 3bbeabb844bc8744db0f73a965b56053cac83934
           if (doctorByName) {
             resolvedDoctorId = doctorByName.id;
           }

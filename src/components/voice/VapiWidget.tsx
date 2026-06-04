@@ -14,6 +14,8 @@ function VapiWidget() {
   const [messages, setMessages] = useState<any[]>([]);
   const [callEnded, setCallEnded] = useState(false);
 
+
+
   const { user, isLoaded } = useUser();
   const messageContainerRef = useRef<HTMLDivElement>(null);
 
@@ -92,9 +94,19 @@ function VapiWidget() {
         setMessages([]);
         setCallEnded(false);
 
+        console.log(
+          "ASSISTANT:",
+          process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID
+        );
+        console.log(
+          "ASSISTANT ID =",
+          process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID
+        );
         await vapi.start(process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID);
-      } catch (error) {
-        console.log("Failed to start call", error);
+      } catch (error: any) {
+        console.error("FULL ERROR:", error);
+        console.error("MESSAGE:", error?.message);
+
         setConnecting(false);
       }
     }
@@ -124,18 +136,16 @@ function VapiWidget() {
           <div className="aspect-video flex flex-col items-center justify-center p-6 relative">
             {/* AI VOICE ANIMATION */}
             <div
-              className={`absolute inset-0 ${
-                isSpeaking ? "opacity-30" : "opacity-0"
-              } transition-opacity duration-300`}
+              className={`absolute inset-0 ${isSpeaking ? "opacity-30" : "opacity-0"
+                } transition-opacity duration-300`}
             >
               {/* voice wave animation when speaking */}
               <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 flex justify-center items-center h-20">
                 {[...Array(5)].map((_, i) => (
                   <div
                     key={i}
-                    className={`mx-1 h-16 w-1 bg-primary rounded-full ${
-                      isSpeaking ? "animate-sound-wave" : ""
-                    }`}
+                    className={`mx-1 h-16 w-1 bg-primary rounded-full ${isSpeaking ? "animate-sound-wave" : ""
+                      }`}
                     style={{
                       animationDelay: `${i * 0.1}s`,
                       height: isSpeaking ? `${Math.random() * 50 + 20}%` : "5%",
@@ -148,9 +158,8 @@ function VapiWidget() {
             {/* AI LOGO */}
             <div className="relative size-32 mb-4">
               <div
-                className={`absolute inset-0 bg-primary opacity-10 rounded-full blur-lg ${
-                  isSpeaking ? "animate-pulse" : ""
-                }`}
+                className={`absolute inset-0 bg-primary opacity-10 rounded-full blur-lg ${isSpeaking ? "animate-pulse" : ""
+                  }`}
               />
 
               <div className="relative w-full h-full rounded-full bg-card flex items-center justify-center border border-border overflow-hidden">
@@ -170,24 +179,22 @@ function VapiWidget() {
 
             {/* SPEAKING INDICATOR */}
             <div
-              className={`mt-4 flex items-center gap-2 px-3 py-1 rounded-full bg-card border border-border ${
-                isSpeaking ? "border-primary" : ""
-              }`}
+              className={`mt-4 flex items-center gap-2 px-3 py-1 rounded-full bg-card border border-border ${isSpeaking ? "border-primary" : ""
+                }`}
             >
               <div
-                className={`w-2 h-2 rounded-full ${
-                  isSpeaking ? "bg-primary animate-pulse" : "bg-muted"
-                }`}
+                className={`w-2 h-2 rounded-full ${isSpeaking ? "bg-primary animate-pulse" : "bg-muted"
+                  }`}
               />
 
               <span className="text-xs text-muted-foreground">
                 {isSpeaking
                   ? "Speaking..."
                   : callActive
-                  ? "Listening..."
-                  : callEnded
-                  ? "Call ended"
-                  : "Waiting..."}
+                    ? "Listening..."
+                    : callEnded
+                      ? "Call ended"
+                      : "Waiting..."}
               </span>
             </div>
           </div>
@@ -248,32 +255,14 @@ function VapiWidget() {
       )}
 
       {/* CALL CONTROLS */}
+      {/* CALL CONTROLS */}
       <div className="w-full flex justify-center gap-4">
-        <Button
-          className={`w-44 text-xl rounded-3xl ${
-            callActive
-              ? "bg-destructive hover:bg-destructive/90"
-              : callEnded
-              ? "bg-red-500 hover:bg-red-700"
-              : "bg-primary hover:bg-primary/90"
-          } text-white relative`}
+        <button
+          className="bg-blue-500 text-white px-6 py-3 rounded-lg"
           onClick={toggleCall}
-          disabled={connecting || callEnded}
         >
-          {connecting && (
-            <span className="absolute inset-0 rounded-full animate-ping bg-primary/50 opacity-75"></span>
-          )}
-
-          <span>
-            {callActive
-              ? "End Call"
-              : connecting
-              ? "Connecting..."
-              : callEnded
-              ? "Call Ended"
-              : "Start Call"}
-          </span>
-        </Button>
+          Start Call
+        </button>
       </div>
     </div>
   );
