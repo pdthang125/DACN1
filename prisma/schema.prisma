@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,35 +8,31 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  clerkId   String   @unique
-  email     String   @unique
-  firstName String?
-  lastName  String?
-  phone     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // relationships
+  id           String        @id @default(cuid())
+  clerkId      String        @unique
+  email        String        @unique
+  firstName    String?
+  lastName     String?
+  phone        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   appointments Appointment[]
 
   @@map("users")
 }
 
 model Doctor {
-  id          String   @id @default(cuid())
-  name        String
-  email       String   @unique
-  phone       String
-  speciality  String
-  bio         String?
-  imageUrl    String
-  gender      Gender
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // relationships
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  phone        String
+  speciality   String
+  bio          String?
+  imageUrl     String
+  gender       Gender
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   appointments Appointment[]
 
   @@map("doctors")
@@ -50,26 +43,17 @@ model Appointment {
   date        DateTime
   time        String
   duration    Int               @default(30)
-
   status      AppointmentStatus @default(CONFIRMED)
-
   notes       String?
   reason      String?
-
-  // NEW FIELDS
   phoneNumber String?
   symptom     String
-
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
-
-  // foreign keys
-  userId   String
-  doctorId String
-
-  // relationships
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  userId      String
+  doctorId    String
+  doctor      Doctor            @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("appointments")
 }
