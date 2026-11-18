@@ -1,232 +1,80 @@
-  "use server";
 
-  import { auth } from "@clerk/nextjs/server";
-  import { prisma } from "../prisma";
-  import { AppointmentStatus } from "@prisma/client";
+"use server";
 
-  function transformAppointment(appointment: any) {
-    return {
-      ...appointment,
-      patientName: `${appointment.user.firstName || ""} ${appointment.user.lastName || ""}`.trim(),
-      patientEmail: appointment.user.email,
-      doctorName: appointment.doctor.name,
-      doctorImageUrl: appointment.doctor.imageUrl || "",
-      date: appointment.date.toISOString().split("T")[0],
-    };
-  }
+import {
+  getAppointmentsService,
+  getUserAppointmentsService,
+  getBookedTimeSlotsService,
+  getDoctorAvailableTimeSlotsService,
+  bookAppointmentService,
+  cancelAppointmentService,
+  startAppointmentService,
+  completeAppointmentService,
+  markAppointmentNoShowService,
+  getUserAppointmentStatsService,
+} from "@/lib/services/appointments.service";
 
-  export async function getAppointments() {
-    try {
-      const appointments = await prisma.appointment.findMany({
-        include: {
-          user: {
-            select: {
-              firstName: true,
-              lastName: true,
-              email: true,
-            },
-          },
-          doctor: { select: { name: true, imageUrl: true } },
-        },
-        orderBy: { createdAt: "desc" },
-      });
+import type {
+  BookAppointmentRequest,
+  AvailableTimeSlot,
+} from "@/lib/services/appointments.service";
 
-      return appointments.map(transformAppointment);
-    } catch (error) {
-      console.log("Error fetching appointments:", error);
-      throw new Error("Failed to fetch appointments");
+export async function getAppointments() {
+  return getAppointmentsService();
+}
+
+export async function getUserAppointments() {
+  return getUserAppointmentsService();
+}
+
+export async function getUserAppointmentStats() {
+  return getUserAppointmentStatsService();
+}
+
+export async function getDoctorAvailableSlots(
+  doctorId: string,
+  date: string,
+  serviceId?: string,
+): Promise<AvailableTimeSlot[]> {
+  return getDoctorAvailableTimeSlotsService(doctorId, date, serviceId);
+}
+
+export async function getBookedTimeSlots(
+  doctorId: string,
+  date: string,
+  serviceId?: string,
+) {
+  return getBookedTimeSlotsService(doctorId, date, serviceId);
+}
+
+export async function bookAppointment(input: BookAppointmentRequest) {
+  try {
+    const appointment = await bookAppointmentService(input);
+    return { ok: true, appointment } as const;
+  } catch (error) {
+    if (error instanceof Error && error.message === "SERVICE_NOT_AVAILABLE") {
+      return { ok: false, code: "SERVICE_NOT_AVAILABLE" } as const;
     }
-  }
-
-  export async function getUserAppointments() {
-    try {
-      // get authenticated user from Clerk
-      const { userId } = await auth();
-      if (!userId) throw new Error("You must be logged in to view appointments");
-
-      // find user by clerkId from authenticated session
-      const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-      if (!user) throw new Error("User not found. Please ensure your account is properly set up.");
-
-      const appointments = await prisma.appointment.findMany({
-        where: { userId: user.id },
-        include: {
-          user: { select: { firstName: true, lastName: true, email: true } },
-          doctor: { select: { name: true, imageUrl: true } },
-        },
-        orderBy: [{ date: "asc" }, { time: "asc" }],
-      });
-
-      return appointments.map(transformAppointment);
-    } catch (error) {
-      console.error("Error fetching user appointments:", error);
-      throw new Error("Failed to fetch user appointments");
-    }
-  }
-
-  export async function getUserAppointmentStats() {
-    try {
-      const { userId } = await auth();
-    if (!userId) {
-
-    return {
-      totalAppointments: 0,
-      completedAppointments: 0,
-      upcomingAppointments: 0,
-      cancelledAppointments: 0,
-    };
-
-  }
-
-      const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-
-      if (!user) throw new Error("User not found");
-
-      // these calls will run in parallel, instead of waiting each other
-    
-    const [
-  totalCount,
-  completedCount,
-  upcomingCount,
-  cancelledCount,
-] = await Promise.all([
-
-  prisma.appointment.count({
-    where: {
-      userId: user.id,
-    },
-  }),
-
-  prisma.appointment.count({
-    where: {
-      userId: user.id,
-      status: "COMPLETED",
-    },
-  }),
-
-  prisma.appointment.count({
-    where: {
-      userId: user.id,
-      status: "CONFIRMED",
-    },
-  }),
-
-  prisma.appointment.count({
-    where: {
-      userId: user.id,
-      status: "CANCELLED",
-    },
-  }),
-
-]);
-    
-
-      return {
-  totalAppointments:
-    totalCount,
-
-  completedAppointments:
-    completedCount,
-
-  upcomingAppointments:
-    upcomingCount,
-
-  cancelledAppointments:
-    cancelledCount,
-};
-    } catch (error) {
-      console.error("Error fetching user appointment stats:", error);
-      return {
-  totalAppointments: 0,
-  completedAppointments: 0,
-  upcomingAppointments: 0,
-  cancelledAppointments: 0,
-};
-    }
-  }
-
-  export async function getBookedTimeSlots(doctorId: string, date: string) {
-    try {
-      const appointments = await prisma.appointment.findMany({
-        where: {
-          doctorId,
-          date: new Date(date),
-          status: {
-            in: ["CONFIRMED", "COMPLETED"], // consider both confirmed and completed appointments as blocking
-          },
-        },
-        select: { time: true },
-      });
-
-      return appointments.map((appointment) => appointment.time);
-    } catch (error) {
-      console.error("Error fetching booked time slots:", error);
-      return []; // return empty array if there's an error
-    }
-  }
-
-  interface BookAppointmentInput {
-    doctorId: string;
-    date: string;
-    time: string;
-    reason?: string;
-    phoneNumber?: string;
-    symptom?: string;
-  }
-
-  export async function bookAppointment(input: BookAppointmentInput) {
-    try {
-      const { userId } = await auth();
-      if (!userId) throw new Error("You must be logged in to book an appointment");
-
-      if (!input.doctorId || !input.date || !input.time) {
-        throw new Error("Doctor, date, and time are required");
-      }
-
-      const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-      if (!user) throw new Error("User not found. Please ensure your account is properly set up.");
-
-      const appointment = await prisma.appointment.create({
-        data: {
-    userId: user.id,
-    doctorId: input.doctorId,
-    date: new Date(input.date),
-    time: input.time,
-    reason: input.reason || "General consultation",
-    symptom: input.reason || "Khám tổng quát",
-    phoneNumber: input.phoneNumber,
-    notes: input.symptom,
-    status: "CONFIRMED",
-  },
-        include: {
-          user: {
-            select: {
-              firstName: true,
-              lastName: true,
-              email: true,
-            },
-          },
-          doctor: { select: { name: true, imageUrl: true } },
-        },
-      });
-
-      return transformAppointment(appointment);
-    } catch (error) {
-      console.error("Error booking appointment:", error);
-      throw new Error("Failed to book appointment. Please try again later.");
-    }
-  }
-
-  export async function updateAppointmentStatus(input: { id: string; status: AppointmentStatus }) {
-    try {
-      const appointment = await prisma.appointment.update({
-        where: { id: input.id },
-        data: { status: input.status },
-      });
-
-      return appointment;
-    } catch (error) {
-    console.error("Error booking appointment:", error);
     throw error;
   }
-  }
+}
+
+export async function cancelAppointment(input: {
+  appointmentId: string;
+  cancellationReason?: string;
+  expectedStatus?: "CONFIRMED" | "PENDING_PAYMENT";
+}) {
+  return cancelAppointmentService(input);
+}
+
+export async function startAppointment(appointmentId: string) {
+  return startAppointmentService(appointmentId);
+}
+
+export async function completeAppointment(appointmentId: string) {
+  return completeAppointmentService(appointmentId);
+}
+
+export async function markAppointmentNoShow(appointmentId: string) {
+  return markAppointmentNoShowService(appointmentId);
+}

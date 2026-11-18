@@ -6,12 +6,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CheckCircleIcon, MailIcon, CalendarIcon, ClockIcon, UserIcon } from "lucide-react";
+import {
+  CheckCircleIcon,
+  MailIcon,
+  CalendarIcon,
+  ClockIcon,
+  UserIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface AppointmentConfirmationModalProps {
   open: boolean;
+  emailSent?: boolean | null;
   onOpenChange: (open: boolean) => void;
   appointmentDetails: {
     doctorName: string;
@@ -62,7 +70,9 @@ export function AppointmentConfirmationModal({
                 Thông tin chi tiết đã được gửi đến email
               </div>
               {appointmentDetails?.userEmail && (
-                <p className="text-xs text-muted-foreground">{appointmentDetails.userEmail}</p>
+                <p className="text-xs text-muted-foreground">
+                  {appointmentDetails.userEmail}
+                </p>
               )}
             </div>
           </div>
@@ -70,12 +80,16 @@ export function AppointmentConfirmationModal({
           {/* Appointment Summary */}
           {appointmentDetails && (
             <div className="bg-muted/30 rounded-lg p-4 space-y-3">
-              <h4 className="font-medium text-sm text-center mb-3">Tóm tắt Lịch hẹn</h4>
+              <h4 className="font-medium text-sm text-center mb-3">
+                Tóm tắt Lịch hẹn
+              </h4>
 
               <div className="space-y-2">
                 <div className="flex items-center gap-3 text-sm">
                   <UserIcon className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">{appointmentDetails.doctorName}</span>
+                  <span className="font-medium">
+                    {appointmentDetails.doctorName}
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-3 text-sm">
@@ -99,7 +113,11 @@ export function AppointmentConfirmationModal({
               </Button>
             </Link>
 
-            <Button variant="outline" className="w-full" onClick={() => onOpenChange(false)}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => onOpenChange(false)}
+            >
               Đóng
             </Button>
           </div>

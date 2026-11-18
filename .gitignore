@@ -55,3 +55,5 @@ training/yolo/venv/
 training/yolo/venv_312/
 *.pt
 *.zip
+# clerk configuration (can include secrets)
+/.clerk/

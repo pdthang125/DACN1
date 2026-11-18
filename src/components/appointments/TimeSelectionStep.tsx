@@ -1,42 +1,36 @@
-import { useBookedTimeSlots } from "@/hooks/use-appointment";
-import {
-  APPOINTMENT_TYPES,
-  getAvailableTimeSlots,
-  getNext5Days,
-} from "@/lib/utils";
+"use client";
+
+import { useEffect } from "react";
+import { useDoctorAvailableSlots } from "@/hooks/use-appointment";
+import { getNext5Days } from "@/lib/utils";
 
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-
 import {
   ChevronLeftIcon,
   ClockIcon,
   CalendarDaysIcon,
   SparklesIcon,
   ArrowRightIcon,
-  PhoneIcon,
-  FileTextIcon,
 } from "lucide-react";
-
 import { Card, CardContent } from "../ui/card";
+
+export interface ServiceOption {
+  id: string;
+  name: string;
+  durationMinutes: number;
+  price: number;
+}
 
 interface TimeSelectionStepProps {
   selectedDentistId: string;
   selectedDate: string;
   selectedTime: string;
-  selectedType: string;
-
-  // NEW
-  phoneNumber: string;
-  symptom: string;
-
-  onPhoneNumberChange: (value: string) => void;
-  onSymptomChange: (value: string) => void;
+  selectedServiceId: string;
+  services: ServiceOption[];
 
   onDateChange: (date: string) => void;
   onTimeChange: (time: string) => void;
-  onTypeChange: (type: string) => void;
+  onServiceChange: (serviceId: string) => void;
 
   onBack: () => void;
   onContinue: () => void;
@@ -47,28 +41,31 @@ function TimeSelectionStep({
   onContinue,
   onDateChange,
   onTimeChange,
-  onTypeChange,
-
-  // NEW
-  onPhoneNumberChange,
-  onSymptomChange,
-
+  onServiceChange,
   selectedDate,
   selectedDentistId,
   selectedTime,
-  selectedType,
-
-  // NEW
-  phoneNumber,
-  symptom,
+  selectedServiceId,
+  services,
 }: TimeSelectionStepProps) {
-  const { data: bookedTimeSlots = [] } = useBookedTimeSlots(
-    selectedDentistId,
-    selectedDate
-  );
+  const { data: doctorSlots = [], isLoading: isLoadingSlots } =
+    useDoctorAvailableSlots(selectedDentistId, selectedDate, selectedServiceId);
 
   const availableDates = getNext5Days();
-  const availableTimeSlots = getAvailableTimeSlots();
+
+  // Tự động chọn ngày đầu tiên nếu chưa chọn để người dùng thấy ngay UI chọn giờ
+  useEffect(() => {
+    if (!selectedDate && availableDates.length > 0) {
+      onDateChange(availableDates[0]);
+    }
+  }, [selectedDate, availableDates, onDateChange]);
+
+  // Tự động chọn dịch vụ đầu tiên nếu chưa chọn
+  useEffect(() => {
+    if (!selectedServiceId && services.length > 0) {
+      onServiceChange(services[0].id);
+    }
+  }, [selectedServiceId, services, onServiceChange]);
 
   const handleDateSelect = (date: string) => {
     onDateChange(date);
@@ -97,9 +94,8 @@ function TimeSelectionStep({
       </div>
 
       <div className="grid lg:grid-cols-2 gap-12">
-        {/* LEFT */}
+        {/* LEFT: SERVICE SELECTION */}
         <div className="space-y-8">
-          {/* SERVICE */}
           <div className="space-y-6">
             <div className="flex items-center gap-2 text-slate-400 mb-2">
               <SparklesIcon className="size-4 text-blue-500" />
@@ -110,17 +106,15 @@ function TimeSelectionStep({
             </div>
 
             <div className="space-y-4">
-              {APPOINTMENT_TYPES.map((type) => {
-                const isSelected = selectedType === type.id;
+              {services.map((s) => {
+                const isSelected = selectedServiceId === s.id;
 
                 return (
                   <div
-                    key={type.id}
-                    onClick={() => onTypeChange(type.id)}
+                    key={s.id}
+                    onClick={() => onServiceChange(s.id)}
                     className={`group relative cursor-pointer rounded-2xl transition-all duration-300 ${
-                      isSelected
-                        ? "scale-[1.02]"
-                        : "hover:scale-[1.01]"
+                      isSelected ? "scale-[1.02]" : "hover:scale-[1.01]"
                     }`}
                   >
                     <Card
@@ -135,12 +129,10 @@ function TimeSelectionStep({
                           <div className="space-y-1">
                             <h4
                               className={`font-black text-base ${
-                                isSelected
-                                  ? "text-white"
-                                  : "text-slate-900"
+                                isSelected ? "text-white" : "text-slate-900"
                               }`}
                             >
-                              {type.name}
+                              {s.name}
                             </h4>
 
                             <div className="flex items-center gap-2">
@@ -159,7 +151,9 @@ function TimeSelectionStep({
                                     : "text-slate-500"
                                 }`}
                               >
-                                {type.duration}
+                                {typeof s.durationMinutes === "number"
+                                  ? `${s.durationMinutes} phút`
+                                  : s.durationMinutes}
                               </p>
                             </div>
                           </div>
@@ -171,7 +165,11 @@ function TimeSelectionStep({
                                 : "bg-blue-50 text-blue-600"
                             }`}
                           >
-                            {type.price}
+                            {typeof s.price === "number"
+                              ? s.price === 0
+                                ? "Miễn phí"
+                                : `${s.price.toLocaleString("vi-VN")}đ`
+                              : s.price}
                           </div>
                         </div>
                       </CardContent>
@@ -181,45 +179,9 @@ function TimeSelectionStep({
               })}
             </div>
           </div>
-
-          {/* PHONE */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <PhoneIcon className="size-4 text-blue-500" />
-
-              <h3 className="text-sm font-black uppercase tracking-widest text-slate-500">
-                Số điện thoại
-              </h3>
-            </div>
-
-            <Input
-              value={phoneNumber}
-              onChange={(e) => onPhoneNumberChange(e.target.value)}
-              placeholder="Nhập số điện thoại của bạn"
-              className="h-12 rounded-2xl border-slate-200 focus-visible:ring-blue-500"
-            />
-          </div>
-
-          {/* SYMPTOM */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <FileTextIcon className="size-4 text-blue-500" />
-
-              <h3 className="text-sm font-black uppercase tracking-widest text-slate-500">
-                Triệu chứng đau răng
-              </h3>
-            </div>
-
-            <Textarea
-              value={symptom}
-              onChange={(e) => onSymptomChange(e.target.value)}
-              placeholder="Ví dụ: đau nhức răng, ê buốt, chảy máu chân răng..."
-              className="min-h-[120px] rounded-2xl border-slate-200 focus-visible:ring-blue-500 resize-none"
-            />
-          </div>
         </div>
 
-        {/* RIGHT */}
+        {/* RIGHT: DATE & TIME SELECTION */}
         <div className="space-y-8">
           {/* DATE */}
           <div className="space-y-6">
@@ -239,6 +201,7 @@ function TimeSelectionStep({
                 return (
                   <button
                     key={date}
+                    type="button"
                     onClick={() => handleDateSelect(date)}
                     className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 ${
                       isSelected
@@ -248,9 +211,7 @@ function TimeSelectionStep({
                   >
                     <span
                       className={`text-[10px] font-black uppercase tracking-widest mb-1 ${
-                        isSelected
-                          ? "text-blue-600"
-                          : "text-slate-400"
+                        isSelected ? "text-blue-600" : "text-slate-400"
                       }`}
                     >
                       {dateObj.toLocaleDateString("vi-VN", {
@@ -260,9 +221,7 @@ function TimeSelectionStep({
 
                     <span
                       className={`text-lg font-black ${
-                        isSelected
-                          ? "text-blue-700"
-                          : "text-slate-900"
+                        isSelected ? "text-blue-700" : "text-slate-900"
                       }`}
                     >
                       {dateObj.getDate()}
@@ -270,9 +229,7 @@ function TimeSelectionStep({
 
                     <span
                       className={`text-[10px] font-bold ${
-                        isSelected
-                          ? "text-blue-400"
-                          : "text-slate-400"
+                        isSelected ? "text-blue-400" : "text-slate-400"
                       }`}
                     >
                       Tháng {dateObj.getMonth() + 1}
@@ -284,69 +241,128 @@ function TimeSelectionStep({
           </div>
 
           {/* TIME */}
-          {selectedDate && (
-            <div className="space-y-6 animate-in fade-in duration-500">
-              <div className="flex items-center gap-2 text-slate-400 mb-2">
-                <ClockIcon className="size-4 text-blue-500" />
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 text-slate-400 mb-2">
+              <ClockIcon className="size-4 text-blue-500" />
 
-                <h3 className="text-sm font-black uppercase tracking-widest">
-                  Giờ trống
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
-                {availableTimeSlots.map((time) => {
-                  const isBooked = bookedTimeSlots.includes(time);
-                  const isSelected = selectedTime === time;
-
-                  return (
-                    <button
-                      key={time}
-                      disabled={isBooked}
-                      onClick={() =>
-                        !isBooked && onTimeChange(time)
-                      }
-                      className={`flex items-center justify-center h-11 rounded-xl text-xs font-black transition-all ${
-                        isSelected
-                          ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-                          : isBooked
-                          ? "bg-slate-50 text-slate-300 cursor-not-allowed border border-slate-100"
-                          : "bg-white text-slate-600 border border-slate-100 hover:border-blue-200 hover:text-blue-600"
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {bookedTimeSlots.length > 5 && (
-                <p className="text-[10px] text-slate-400 italic">
-                  * Lưu ý: Nhiều khung giờ đã có người đặt trước
-                </p>
-              )}
+              <h3 className="text-sm font-black uppercase tracking-widest">
+                Giờ trống
+              </h3>
             </div>
-          )}
+
+            {selectedDate ? (
+              isLoadingSlots ? (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
+                  {Array.from({ length: 8 }).map((_, idx) => (
+                    <div
+                      key={idx}
+                      className="h-12 rounded-xl bg-slate-100 animate-pulse border border-slate-200/50"
+                    />
+                  ))}
+                </div>
+              ) : doctorSlots.length > 0 ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
+                    {doctorSlots.map((slot) => {
+                      const isSelected = selectedTime === slot.time;
+                      const isDisabled = !slot.available;
+
+                      return (
+                        <button
+                          key={slot.time}
+                          type="button"
+                          disabled={isDisabled}
+                          title={
+                            slot.reason ||
+                            (slot.available
+                              ? "Khung giờ trống"
+                              : "Không thể đặt")
+                          }
+                          onClick={() => !isDisabled && onTimeChange(slot.time)}
+                          className={`group relative flex flex-col items-center justify-center h-12 rounded-xl text-xs font-black transition-all ${
+                            isSelected
+                              ? "bg-blue-600 text-white shadow-lg shadow-blue-200 scale-105 z-10"
+                              : isDisabled
+                                ? "bg-slate-50 text-slate-300 cursor-not-allowed border border-slate-100"
+                                : "bg-white text-slate-700 border border-slate-200 hover:border-blue-500 hover:text-blue-600 hover:shadow-md"
+                          }`}
+                        >
+                          <span>{slot.time}</span>
+                          {slot.reason && isDisabled && (
+                            <span className="text-[9px] font-normal text-slate-400 line-clamp-1">
+                              {slot.reason === "Đã có người đặt"
+                                ? "Đã đặt"
+                                : slot.reason === "Đã qua khung giờ khám"
+                                  ? "Đã qua"
+                                  : slot.reason === "Bác sĩ nghỉ phép"
+                                    ? "Bác sĩ nghỉ"
+                                    : "Bận"}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Chú thích trạng thái */}
+                  <div className="flex flex-wrap items-center gap-4 pt-2 text-[11px] text-slate-400 font-medium">
+                    <div className="flex items-center gap-1.5">
+                      <span className="size-2 rounded-full bg-blue-600" />
+                      <span>Đang chọn</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="size-2 rounded-full border border-slate-300 bg-white" />
+                      <span>Có thể đặt</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="size-2 rounded-full bg-slate-200" />
+                      <span>Đã đặt / Đã qua giờ</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-6 text-center border-2 border-dashed border-amber-200 bg-amber-50/50 rounded-2xl text-amber-700 text-xs font-semibold">
+                  Bác sĩ không có lịch làm việc trong ngày này. Quý khách vui
+                  lòng chọn ngày khác.
+                </div>
+              )
+            ) : (
+              <div className="p-6 text-center border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 text-xs font-medium">
+                Vui lòng chọn ngày khám ở trên để hiển thị giờ trống
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* BUTTON */}
-      {selectedType &&
-        selectedDate &&
-        selectedTime &&
-        phoneNumber &&
-        symptom && (
-          <div className="flex justify-end pt-4">
-            <Button
-              onClick={onContinue}
-              className="h-14 px-10 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-base shadow-xl shadow-blue-200 transition-all hover:-translate-y-1 group"
-            >
-              Xem lại Lịch đặt
+      {/* FOOTER ACTIONS */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-100">
+        <Button
+          variant="outline"
+          onClick={onBack}
+          className="h-12 px-6 rounded-2xl border-slate-200 text-slate-600 font-bold hover:bg-slate-50"
+        >
+          <ChevronLeftIcon className="mr-2 size-4" /> Quay lại chọn bác sĩ
+        </Button>
 
-              <ArrowRightIcon className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
+        {selectedServiceId && selectedDate && selectedTime ? (
+          <Button
+            onClick={onContinue}
+            className="h-14 px-10 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-base shadow-xl shadow-blue-200 transition-all hover:-translate-y-1 group"
+          >
+            Điền thông tin & Xác nhận
+            <ArrowRightIcon className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        ) : (
+          <p className="text-xs font-semibold text-slate-400 italic">
+            {!selectedServiceId
+              ? "Vui lòng chọn dịch vụ"
+              : !selectedDate
+                ? "Vui lòng chọn ngày khám"
+                : "Vui lòng chọn khung giờ để tiếp tục"}
+          </p>
         )}
+      </div>
     </div>
   );
 }
